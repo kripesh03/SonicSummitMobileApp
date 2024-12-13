@@ -11,7 +11,7 @@ void main() {
     MaterialApp(
       initialRoute: '//',
       routes: {
-        '//': (context) => OnboardingView(),
+        '//': (context) => SplashScreenView(),
       },
     ),
   );

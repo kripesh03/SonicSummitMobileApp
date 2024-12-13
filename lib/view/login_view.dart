@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sonic_summit_mobile_app/view/homepage_view.dart';
 import 'package:sonic_summit_mobile_app/view/registration_view.dart';
 
 class LoginView extends StatefulWidget {
@@ -111,7 +112,12 @@ class _LoginViewState extends State<LoginView> {
                         SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () {
-                            // Perform login action
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomePage(),
+                              ),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.purple,

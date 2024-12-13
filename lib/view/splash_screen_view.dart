@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:sonic_summit_mobile_app/view/onboard_view.dart';
 
 class SplashScreenView extends StatelessWidget {
   const SplashScreenView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Navigate to onboarding screen after a delay
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => OnboardingView()), // Navigate to Onboarding
+      );
+    });
+
     return Scaffold(
-      backgroundColor: Colors.white, // Soft white background
+      backgroundColor: Colors.white,
       body: Center(
         child: Container(
           width: double.infinity,
@@ -19,14 +28,11 @@ class SplashScreenView extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            // Rounded corners for a modern look
           ),
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Logo with smooth scaling effect
               AnimatedContainer(
                 duration: Duration(seconds: 3),
                 curve: Curves.easeInOut,
@@ -35,7 +41,7 @@ class SplashScreenView extends StatelessWidget {
                   decoration: BoxDecoration(),
                   child: Image.asset(
                     "assets/icons/logo_without_background.png",
-                    width: 180, // Increased logo size for better visibility
+                    width: 180,
                     height: 180,
                   ),
                 ),
