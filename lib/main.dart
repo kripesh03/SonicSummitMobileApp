@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sonic_summit_mobile_app/view/homepage_view.dart';
 import 'package:sonic_summit_mobile_app/view/login_view.dart';
 import 'package:sonic_summit_mobile_app/view/onboard_view.dart';
 import 'package:sonic_summit_mobile_app/view/registration_view.dart';
@@ -10,7 +11,7 @@ void main() {
     MaterialApp(
       initialRoute: '//',
       routes: {
-        '//': (context) => SplashScreenView(),
+        '//': (context) => OnboardingView(),
       },
     ),
   );
