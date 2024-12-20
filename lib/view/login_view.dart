@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sonic_summit_mobile_app/view/homepage_view.dart';
+import 'package:sonic_summit_mobile_app/view/bottom_view/bottom_nav_view.dart';
 import 'package:sonic_summit_mobile_app/view/registration_view.dart';
 
 class LoginView extends StatefulWidget {
+  const LoginView({super.key});
+
   @override
   _LoginViewState createState() => _LoginViewState();
 }
@@ -21,7 +23,7 @@ class _LoginViewState extends State<LoginView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   "Welcome Back!",
                   style: TextStyle(
                     fontSize: 28,
@@ -29,7 +31,7 @@ class _LoginViewState extends State<LoginView> {
                     color: Colors.purple,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   "Log in to continue to SonicSummit",
                   style: TextStyle(
@@ -38,7 +40,7 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
                 Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -49,14 +51,14 @@ class _LoginViewState extends State<LoginView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(
+                        const Text(
                           "Login",
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         TextField(
                           decoration: InputDecoration(
                             labelText: "Email",
@@ -67,7 +69,7 @@ class _LoginViewState extends State<LoginView> {
                           ),
                           keyboardType: TextInputType.emailAddress,
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         TextField(
                           decoration: InputDecoration(
                             labelText: "Password",
@@ -78,7 +80,7 @@ class _LoginViewState extends State<LoginView> {
                           ),
                           obscureText: true,
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -92,14 +94,14 @@ class _LoginViewState extends State<LoginView> {
                                     });
                                   },
                                 ),
-                                Text("Remember Me"),
+                                const Text("Remember Me"),
                               ],
                             ),
                             TextButton(
                               onPressed: () {
                                 // Navigate to password recovery page
                               },
-                              child: Text(
+                              child: const Text(
                                 "Forgot Password?",
                                 style: TextStyle(
                                   color: Colors.purple,
@@ -109,13 +111,13 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => HomePage(),
+                                builder: (context) => const DashboardScreen(),
                               ),
                             );
                           },
@@ -125,8 +127,8 @@ class _LoginViewState extends State<LoginView> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16.0),
                             child: Text(
                               "Login",
                               style: TextStyle(color: Colors.white),
@@ -137,12 +139,12 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Text(
                   "Don't have an account?",
                   style: TextStyle(color: Colors.grey[600]),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 OutlinedButton(
                   onPressed: () {
                     Navigator.push(
@@ -152,23 +154,23 @@ class _LoginViewState extends State<LoginView> {
                     );
                   },
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.purple),
+                    side: const BorderSide(color: Colors.purple),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12.0),
                     child: Text(
                       "Sign Up",
                       style: TextStyle(color: Colors.purple),
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Row(
                   children: [
-                    Expanded(
+                    const Expanded(
                       child: Divider(thickness: 1),
                     ),
                     Padding(
@@ -178,12 +180,12 @@ class _LoginViewState extends State<LoginView> {
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                     ),
-                    Expanded(
+                    const Expanded(
                       child: Divider(thickness: 1),
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -191,14 +193,14 @@ class _LoginViewState extends State<LoginView> {
                       onPressed: () {
                         // Facebook login action
                       },
-                      icon: Icon(Icons.facebook, color: Colors.blue),
+                      icon: const Icon(Icons.facebook, color: Colors.blue),
                       iconSize: 32,
                     ),
                     IconButton(
                       onPressed: () {
                         // Apple login action
                       },
-                      icon: Icon(Icons.apple, color: Colors.black),
+                      icon: const Icon(Icons.apple, color: Colors.black),
                       iconSize: 32,
                     ),
                   ],

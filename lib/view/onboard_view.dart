@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sonic_summit_mobile_app/view/login_view.dart';
-import 'package:sonic_summit_mobile_app/view/registration_view.dart';
 
 class OnboardingView extends StatefulWidget {
+  const OnboardingView({super.key});
+
   @override
   _OnboardingViewState createState() => _OnboardingViewState();
 }
@@ -54,17 +55,17 @@ class _OnboardingViewState extends State<OnboardingView> {
                       onboardingData[index]["image"]!,
                       height: 300,
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     Text(
                       onboardingData[index]["title"]!,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Colors.purple,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32.0),
                       child: Text(
@@ -93,7 +94,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                     (index) => buildDot(index: index),
                   ),
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () {
                     if (currentPage == onboardingData.length - 1) {
@@ -105,7 +106,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                       );
                     } else {
                       _pageController.nextPage(
-                        duration: Duration(milliseconds: 300),
+                        duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
                       );
                     }
@@ -115,13 +116,13 @@ class _OnboardingViewState extends State<OnboardingView> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: Text(
                     currentPage == onboardingData.length - 1
                         ? "Get Started"
                         : "Next",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
               ],
@@ -134,8 +135,8 @@ class _OnboardingViewState extends State<OnboardingView> {
 
   Widget buildDot({required int index}) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
-      margin: EdgeInsets.only(right: 8),
+      duration: const Duration(milliseconds: 300),
+      margin: const EdgeInsets.only(right: 8),
       height: 10,
       width: currentPage == index ? 20 : 10,
       decoration: BoxDecoration(

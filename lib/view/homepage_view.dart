@@ -5,29 +5,29 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.menu, color: Colors.black),
-          onPressed: () {},
-        ),
-        title: Text(
-          "SonicSummit",
-          // style: TextStyle(
-          //   color: Colors.purple,
-          //   fontSize: 20,
-          //   fontWeight: FontWeight.bold,
-          // ),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.white,
+      //   elevation: 0,
+      //   leading: IconButton(
+      //     icon: Icon(Icons.menu, color: Colors.black),
+      //     onPressed: () {},
+      //   ),
+      //   title: Text(
+      //     "SonicSummit",
+      //     // style: TextStyle(
+      //     //   color: Colors.purple,
+      //     //   fontSize: 20,
+      //     //   fontWeight: FontWeight.bold,
+      //     // ),
+      //   ),
+      //   centerTitle: true,
+      //   actions: [
+      //     IconButton(
+      //       icon: Icon(Icons.search, color: Colors.black),
+      //       onPressed: () {},
+      //     ),
+      //   ],
+      // ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
