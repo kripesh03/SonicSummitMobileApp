@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sonic_summit_mobile_app/view/bottom_view/explore_view.dart';
+import 'package:sonic_summit_mobile_app/view/bottom_view/message_view.dart';
+import 'package:sonic_summit_mobile_app/view/bottom_view/profile_view.dart';
 import 'package:sonic_summit_mobile_app/view/homepage_view.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -11,7 +14,12 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> lstBottomScreen = [HomePage()];
+  final List<Widget> lstBottomScreen = [
+    HomePage(),
+    const ExploreScreen(),
+    const MessageScreen(),
+    const ProfileScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
