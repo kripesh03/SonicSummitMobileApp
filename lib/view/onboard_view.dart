@@ -14,7 +14,7 @@ class _OnboardingViewState extends State<OnboardingView> {
 
   final List<Map<String, String>> onboardingData = [
     {
-      "image": "assets/images/music_1.jpg",
+      "image": "assets/images/music_1-removebg.png",
       "title": "Explore Music Globally",
       "description":
           "Discover music from artists around the world at your fingertips."
@@ -101,7 +101,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LoginView(),
+                          builder: (context) => const LoginView(),
                         ),
                       );
                     } else {

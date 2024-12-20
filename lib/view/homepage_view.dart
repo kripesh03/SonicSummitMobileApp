@@ -25,7 +25,6 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Search Bar
               Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
@@ -40,10 +39,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-
               SizedBox(height: 16),
-
-              // Header Section Slider with Dots
               Column(
                 children: [
                   Container(
@@ -97,10 +93,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-
               SizedBox(height: 16),
-
-              // Navigation Section
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -110,10 +103,7 @@ class _HomePageState extends State<HomePage> {
                   _buildNavItem(Icons.event, "Events"),
                 ],
               ),
-
               SizedBox(height: 24),
-
-              // Trending Tracks Section
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -174,10 +164,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-
               SizedBox(height: 24),
-
-              // New Releases Section
               Text(
                 "New Releases",
                 style: TextStyle(
@@ -213,10 +200,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-
               SizedBox(height: 24),
-
-              // Artist Spotlight Section
               Text(
                 "Artist Spotlight",
                 style: TextStyle(
@@ -250,7 +234,8 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () {},
                     child: Text(
                       "View Profile",
-                      style: TextStyle(color: Colors.purple),
+                      style: TextStyle(
+                          color: Colors.purple, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -317,7 +302,8 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: 4),
                   Text(
                     artist,
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(
+                        color: Colors.grey, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 4),
                   Text(

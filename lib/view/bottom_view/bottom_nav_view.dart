@@ -9,18 +9,19 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  // Current index for BottomNavigationBar
   int _selectedIndex = 0;
 
-  // List of Screens
   final List<Widget> lstBottomScreen = [HomePage()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sonic Summit'),
         centerTitle: true,
+        title: Image.asset(
+          'assets/logos/logo_without_background.png',
+          height: 60,
+        ),
       ),
       body: lstBottomScreen[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
