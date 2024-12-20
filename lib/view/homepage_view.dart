@@ -14,11 +14,11 @@ class HomePage extends StatelessWidget {
         ),
         title: Text(
           "SonicSummit",
-          style: TextStyle(
-            color: Colors.purple,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          // style: TextStyle(
+          //   color: Colors.purple,
+          //   fontSize: 20,
+          //   fontWeight: FontWeight.bold,
+          // ),
         ),
         centerTitle: true,
         actions: [
@@ -86,11 +86,12 @@ class HomePage extends StatelessWidget {
               SizedBox(height: 24),
 
               // Trending Tracks Section
-              Text(
+              const Text(
                 "Trending Tracks",
                 style: TextStyle(
+                  fontFamily: "Montserrat Bold",
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  // fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
@@ -121,8 +122,9 @@ class HomePage extends StatelessWidget {
               Text(
                 "Featured Artists",
                 style: TextStyle(
+                  fontFamily: "Montserrat Bold",
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  // fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
