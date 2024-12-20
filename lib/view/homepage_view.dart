@@ -59,8 +59,8 @@ class _HomePageState extends State<HomePage> {
                         _buildHeaderSliderItem(
                           imageUrl:
                               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8Lbj_SiI5iqUgGryvak6whMkg5Z8_4OMowQ&s',
-                          title: "Aarav Sharma",
-                          subtitle: "Traditional Fusion Artist",
+                          title: "Foeseal",
+                          subtitle: "EDM Artist",
                         ),
                         _buildHeaderSliderItem(
                           imageUrl:
@@ -68,13 +68,19 @@ class _HomePageState extends State<HomePage> {
                           title: "Maya Gurung",
                           subtitle: "Melody Innovator",
                         ),
+                        _buildHeaderSliderItem(
+                          imageUrl:
+                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8Lbj_SiI5iqUgGryvak6whMkg5Z8_4OMowQ&s',
+                          title: "Ram",
+                          subtitle: "EDM Artist",
+                        ),
                       ],
                     ),
                   ),
                   SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(2, (index) {
+                    children: List.generate(3, (index) {
                       return AnimatedContainer(
                         duration: Duration(milliseconds: 300),
                         margin: EdgeInsets.symmetric(horizontal: 4.0),
@@ -153,9 +159,10 @@ class _HomePageState extends State<HomePage> {
                       price: "\Rs 399",
                     ),
                     _buildTrendingCard(
-                      imageUrl: 'https://f4.bcbits.com/img/a2306490384_5.jpg',
-                      title: "Atti Bhayo",
-                      artist: "Albatross",
+                      imageUrl:
+                          'https://i.scdn.co/image/ab67616d0000b2739cfd5ce98a386384bffba129',
+                      title: "Gantabya",
+                      artist: "The Edge Band",
                       price: "\Rs 399",
                     ),
                     _buildTrendingCard(
@@ -186,10 +193,10 @@ class _HomePageState extends State<HomePage> {
                   scrollDirection: Axis.horizontal,
                   children: [
                     _buildTrendingCard(
-                      imageUrl: 'https://f4.bcbits.com/img/a2306490384_5.jpg',
-                      title: "Atti Bhayo",
+                      imageUrl: 'https://f4.bcbits.com/img/a2456780782_10.jpg',
+                      title: "Ma Ra Malai",
                       artist: "Albatross",
-                      price: "\Rs 399",
+                      price: "\Rs 499",
                     ),
                     _buildTrendingCard(
                       imageUrl: 'https://f4.bcbits.com/img/a2306490384_5.jpg',
