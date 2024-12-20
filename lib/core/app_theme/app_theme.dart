@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 ThemeData getApplicationTheme() {
   return ThemeData(
-      scaffoldBackgroundColor: const Color.fromARGB(255, 226, 150, 240),
+      scaffoldBackgroundColor: const Color.fromARGB(255, 225, 167, 236),
       fontFamily: "Montserrat Regular",
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(

@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       initialRoute: "/",
       theme: getApplicationTheme(),
       routes: {
-        "/": (context) => OnboardingView(),
+        "/": (context) => const OnboardingView(),
       },
     );
   }

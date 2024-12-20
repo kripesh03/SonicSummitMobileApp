@@ -7,10 +7,12 @@ class SplashScreenView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Navigate to onboarding screen after a delay
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => OnboardingView()), // Navigate to Onboarding
+        MaterialPageRoute(
+            builder: (context) =>
+                const OnboardingView()), // Navigate to Onboarding
       );
     });
 
@@ -19,7 +21,7 @@ class SplashScreenView extends StatelessWidget {
       body: Center(
         child: Container(
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 Color.fromARGB(255, 253, 253, 253), // Soft pink
@@ -34,11 +36,11 @@ class SplashScreenView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AnimatedContainer(
-                duration: Duration(seconds: 3),
+                duration: const Duration(seconds: 3),
                 curve: Curves.easeInOut,
                 transform: Matrix4.identity()..scale(1.1),
                 child: Container(
-                  decoration: BoxDecoration(),
+                  decoration: const BoxDecoration(),
                   child: Image.asset(
                     "assets/icons/logo_without_background.png",
                     width: 180,

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sonic_summit_mobile_app/view/login_view.dart';
 
 class RegistrationView extends StatefulWidget {
+  const RegistrationView({super.key});
+
   @override
   _RegistrationViewState createState() => _RegistrationViewState();
 }
@@ -24,7 +26,7 @@ class _RegistrationViewState extends State<RegistrationView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   "SonicSummit",
                   style: TextStyle(
                     fontSize: 28,
@@ -32,7 +34,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                     color: Colors.purple,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   "Connect with music and artists worldwide",
                   style: TextStyle(
@@ -41,7 +43,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
                 Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -52,14 +54,14 @@ class _RegistrationViewState extends State<RegistrationView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(
+                        const Text(
                           "Create Account",
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         TextField(
                           decoration: InputDecoration(
                             labelText: "Full Name",
@@ -69,7 +71,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         TextField(
                           decoration: InputDecoration(
                             labelText: "Email",
@@ -79,7 +81,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         TextField(
                           decoration: InputDecoration(
                             labelText: "Phone Number",
@@ -90,7 +92,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                           ),
                           keyboardType: TextInputType.phone,
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         DropdownButtonFormField<String>(
                           decoration: InputDecoration(
                             labelText: "Preferred Genre",
@@ -110,7 +112,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                             });
                           },
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         DropdownButtonFormField<String>(
                           decoration: InputDecoration(
                             labelText: "Favorite Artist",
@@ -130,7 +132,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                             });
                           },
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         TextField(
                           maxLines: 3,
                           decoration: InputDecoration(
@@ -141,7 +143,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         TextField(
                           decoration: InputDecoration(
                             labelText: "Password",
@@ -152,7 +154,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                           ),
                           obscureText: true,
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         TextField(
                           decoration: InputDecoration(
                             labelText: "Confirm Password",
@@ -163,7 +165,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                           ),
                           obscureText: true,
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Row(
                           children: [
                             Checkbox(
@@ -174,7 +176,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                                 });
                               },
                             ),
-                            Expanded(
+                            const Expanded(
                               child: Text(
                                 "I agree to the Terms of Service, Privacy Policy, and Community Guidelines",
                                 style: TextStyle(fontSize: 12),
@@ -182,7 +184,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: agreedToTerms
                               ? () {
@@ -195,8 +197,8 @@ class _RegistrationViewState extends State<RegistrationView> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16.0),
                             child: Text(
                               "Create Account",
                               style: TextStyle(color: Colors.white),
@@ -207,37 +209,38 @@ class _RegistrationViewState extends State<RegistrationView> {
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Text(
                   "Already have an account?",
                   style: TextStyle(color: Colors.grey[600]),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 OutlinedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginView()),
+                      MaterialPageRoute(
+                          builder: (context) => const LoginView()),
                     );
                   },
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.purple),
+                    side: const BorderSide(color: Colors.purple),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12.0),
                     child: Text(
                       "Login",
                       style: TextStyle(color: Colors.purple),
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Row(
                   children: [
-                    Expanded(
+                    const Expanded(
                       child: Divider(thickness: 1),
                     ),
                     Padding(
@@ -247,23 +250,23 @@ class _RegistrationViewState extends State<RegistrationView> {
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                     ),
-                    Expanded(
+                    const Expanded(
                       child: Divider(thickness: 1),
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
                       onPressed: () {},
-                      icon: Icon(Icons.facebook, color: Colors.blue),
+                      icon: const Icon(Icons.facebook, color: Colors.blue),
                       iconSize: 32,
                     ),
                     IconButton(
                       onPressed: () {},
-                      icon: Icon(Icons.apple, color: Colors.black),
+                      icon: const Icon(Icons.apple, color: Colors.black),
                       iconSize: 32,
                     ),
                   ],

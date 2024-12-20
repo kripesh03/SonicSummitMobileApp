@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
                 child: TextField(
                   decoration: InputDecoration(
                     icon: Icon(Icons.search, color: Colors.grey),
-                    hintText: "Search...",
+                    hintText: "Search Arts, Music, Merch...",
                     border: InputBorder.none,
                   ),
                 ),
