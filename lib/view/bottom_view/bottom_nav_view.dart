@@ -16,7 +16,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   final List<Widget> lstBottomScreen = [
     HomePage(),
-    const ExploreScreen(),
+    const BrowsePage(),
     const MessageScreen(),
     const ProfileScreen(),
   ];
