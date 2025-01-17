@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sonic_summit_mobile_app/view/login_view.dart';
+import 'package:sonic_summit_mobile_app/features/auth/presentation/view/login_view.dart';
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
@@ -101,7 +101,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const LoginView(),
+                          builder: (context) =>  LoginView(),
                         ),
                       );
                     } else {

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sonic_summit_mobile_app/view/bottom_view/homepage_view.dart';
 import 'package:sonic_summit_mobile_app/view/bottom_view/explore_view.dart';
 import 'package:sonic_summit_mobile_app/view/bottom_view/message_view.dart';
 import 'package:sonic_summit_mobile_app/view/bottom_view/profile_view.dart';
-import 'package:sonic_summit_mobile_app/view/homepage_view.dart';
+import 'package:sonic_summit_mobile_app/features/auth/presentation/view/login_view.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -30,6 +31,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
           'assets/logos/logo_without_background.png',
           height: 60,
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Logging Out'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginView(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: lstBottomScreen[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
