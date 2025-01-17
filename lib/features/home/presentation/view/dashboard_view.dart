@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sonic_summit_mobile_app/view/bottom_view/homepage_view.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sonic_summit_mobile_app/core/common/snackbar/snackbar.dart';
+import 'package:sonic_summit_mobile_app/features/home/presentation/view_model/home_cubit.dart';
 import 'package:sonic_summit_mobile_app/view/bottom_view/explore_view.dart';
+import 'package:sonic_summit_mobile_app/view/bottom_view/homepage_view.dart';
 import 'package:sonic_summit_mobile_app/view/bottom_view/message_view.dart';
 import 'package:sonic_summit_mobile_app/view/bottom_view/profile_view.dart';
-import 'package:sonic_summit_mobile_app/features/auth/presentation/view/login_view.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -35,20 +37,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Logging Out'),
-                  duration: Duration(seconds: 2),
-                ),
+              // Logout code
+              showMySnackBar(
+                context: context,
+                message: 'Logging out...',
+                color: Colors.red,
               );
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LoginView(),
-                ),
-              );
+              context.read<HomeCubit>().logout(context);
             },
-          ),
+          )
         ],
       ),
       body: lstBottomScreen[_selectedIndex],
