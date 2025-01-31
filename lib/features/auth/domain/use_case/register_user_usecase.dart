@@ -8,30 +8,31 @@ import 'package:sonic_summit_mobile_app/features/auth/domain/repository/auth_rep
 class RegisterUserParams extends Equatable {
   final String username;
   final String email;
-  final String role;
   final String bio;
   final String password;
+  final String? profilePicture;
+
 
   const RegisterUserParams({
     required this.username,
     required this.email,
-    required this.role,
     required this.bio,
     required this.password,
+        this.profilePicture,
+
   });
 
-  //intial constructor
   const RegisterUserParams.initial({
     required this.username,
     required this.email,
-    required this.role,
     required this.bio,
     required this.password,
+    this.profilePicture
   });
 
   @override
   List<Object?> get props =>
-      [username, email, role, bio, password];
+      [username, email, bio, password];
 }
 
 class RegisterUseCase implements UsecaseWithParams<void, RegisterUserParams> {
@@ -45,8 +46,9 @@ class RegisterUseCase implements UsecaseWithParams<void, RegisterUserParams> {
       username: params.username,
       email: params.email,
       bio: params.bio,
-      role: params.role,
       password: params.password,
+            profilePicture: params.profilePicture,
+
     );
     return repository.registerUser(authEntity);
   }
