@@ -13,14 +13,15 @@ class AuthRemoteDataSource implements IAuthDataSource {
   @override
   Future<void> registerUser(AuthEntity user) async {
     try {
+      print("data soucr :${user.profilePicture}");
       Response response = await _dio.post(
         ApiEndpoints.register,
         data: {
           "username": user.username,
           "email": user.email,
+          "password": user.password,
           "profilePicture": user.profilePicture,
           "bio": user.bio,
-          "password": user.password,
         },
       );
 

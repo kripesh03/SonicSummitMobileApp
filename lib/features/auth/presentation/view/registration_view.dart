@@ -14,14 +14,12 @@ class RegistrationView extends StatefulWidget {
 }
 
 class _RegistrationViewState extends State<RegistrationView> {
-  final _gap = const SizedBox(height: 8);
   final _key = GlobalKey<FormState>();
   final _usernameController = TextEditingController(text: 'kiran');
   final _emailController = TextEditingController(text: 'rana@gklgka');
   final _bioController = TextEditingController(text: 'hello');
   final _passwordController = TextEditingController(text: 'kiran123');
 
-  // Check for camera permission
   Future<void> checkCameraPermission() async {
     if (await Permission.camera.request().isRestricted ||
         await Permission.camera.request().isDenied) {
@@ -36,13 +34,10 @@ class _RegistrationViewState extends State<RegistrationView> {
       if (image != null) {
         setState(() {
           _img = File(image.path);
-          // Send image to server
           context.read<RegisterBloc>().add(
                 UploadImage(file: _img!),
               );
         });
-      } else {
-        return;
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -52,152 +47,161 @@ class _RegistrationViewState extends State<RegistrationView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register Student'),
-        centerTitle: true,
-      ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Form(
-              key: _key,
-              child: Column(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      showModalBottomSheet(
-                        backgroundColor: Colors.grey[300],
-                        context: context,
-                        isScrollControlled: true,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(20),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Create an Account',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet(
+                      backgroundColor: Colors.white,
+                      context: context,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                      ),
+                      builder: (context) => Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                checkCameraPermission();
+                                _browseImage(ImageSource.camera);
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.camera),
+                              label: const Text('Camera'),
+                            ),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                _browseImage(ImageSource.gallery);
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.image),
+                              label: const Text('Gallery'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: _img != null
+                        ? FileImage(_img!)
+                        : const AssetImage('assets/images/music_3.jpg')
+                            as ImageProvider,
+                    backgroundColor: Colors.grey[300],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Form(
+                  key: _key,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _usernameController,
+                        decoration: InputDecoration(
+                          labelText: 'Username',
+                          prefixIcon: const Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        builder: (context) => Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              ElevatedButton.icon(
-                                onPressed: () {
-                                  checkCameraPermission();
-                                  _browseImage(ImageSource.camera);
-                                  Navigator.pop(context);
-                                },
-                                icon: const Icon(Icons.camera),
-                                label: const Text('Camera'),
-                              ),
-                              ElevatedButton.icon(
-                                onPressed: () {
-                                  _browseImage(ImageSource.gallery);
-                                  Navigator.pop(context);
-                                },
-                                icon: const Icon(Icons.image),
-                                label: const Text('Gallery'),
-                              ),
-                            ],
+                        validator: (value) =>
+                            value == null || value.isEmpty ? 'Enter Username' : null,
+                      ),
+                      const SizedBox(height: 12),
+                      TextFormField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          prefixIcon: const Icon(Icons.email),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                      );
-                    },
-                    child: SizedBox(
-                      height: 200,
-                      width: 200,
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundImage: _img != null
-                            ? FileImage(_img!)
-                            : const AssetImage('assets/images/music_3.jpg')
-                                as ImageProvider,
-                        // backgroundImage:
-                        //     const AssetImage('assets/images/profile.png')
-                        //         as ImageProvider,
+                        validator: (value) =>
+                            value == null || value.isEmpty ? 'Enter Email' : null,
+                      ),
+                      const SizedBox(height: 12),
+                      TextFormField(
+                        controller: _bioController,
+                        decoration: InputDecoration(
+                          labelText: 'Bio',
+                          prefixIcon: const Icon(Icons.info),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        validator: (value) =>
+                            value == null || value.isEmpty ? 'Enter Bio' : null,
+                      ),
+                      const SizedBox(height: 12),
+                      TextFormField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          prefixIcon: const Icon(Icons.lock),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        validator: (value) =>
+                            value == null || value.isEmpty ? 'Enter Password' : null,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 25),
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
-                    ),
-                    validator: ((value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter Username';
+                    onPressed: () {
+                      if (_key.currentState!.validate()) {
+                        final registerState = context.read<RegisterBloc>().state;
+                        final imageName = registerState.imageName;
+                        context.read<RegisterBloc>().add(
+                              RegisterStudent(
+                                context: context,
+                                email: _emailController.text,
+                                bio: _bioController.text,
+                                username: _usernameController.text,
+                                password: _passwordController.text,
+                                profilePicture: imageName,
+                              ),
+                            );
                       }
-                      return null;
-                    }),
-                  ),
-                  _gap,
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'email',
-                    ),
-                    validator: ((value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter email';
-                      }
-                      return null;
-                    }),
-                  ),
-                  _gap,
-                  TextFormField(
-                    controller: _bioController,
-                    decoration: const InputDecoration(
-                      labelText: 'bio ',
-                    ),
-                    validator: ((value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter bio';
-                      }
-                      return null;
-                    }),
-                  ),
-                  _gap,
-                  _gap,
-                  _gap,
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                    ),
-                    validator: ((value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter password';
-                      }
-                      return null;
-                    }),
-                  ),
-                  _gap,
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_key.currentState!.validate()) {
-                          final registerState =
-                              context.read<RegisterBloc>().state;
-                          final imageName = registerState.imageName;
-                          context.read<RegisterBloc>().add(
-                                RegisterStudent(
-                                  context: context,
-                                  email: _emailController.text,
-                                  bio: _bioController.text,
-                                  username: _usernameController.text,
-                                  password: _passwordController.text,
-                                  profilePicture: imageName,
-                                ),
-                              );
-                        }
-                      },
-                      child: const Text('Register'),
+                    },
+                    child: const Text(
+                      'Register',
+                      style: TextStyle(fontSize: 16),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
