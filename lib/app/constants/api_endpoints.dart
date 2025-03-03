@@ -13,4 +13,9 @@ class ApiEndpoints {
   static const String uploadImage = "auth/uploadImage";
 
   static const String getAllProducts = "product";
+
+static String getCart(String userId) {
+    return "cart/$userId";  // Append userId to the cart endpoint
+  }
+
 }

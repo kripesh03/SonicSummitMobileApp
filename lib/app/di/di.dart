@@ -18,6 +18,11 @@ import 'package:sonic_summit_mobile_app/features/browse/data/repository/product_
 import 'package:sonic_summit_mobile_app/features/browse/domain/repository/product_repository.dart';
 import 'package:sonic_summit_mobile_app/features/browse/domain/use_case/get_all_product_usecase.dart';
 import 'package:sonic_summit_mobile_app/features/browse/presentation/view_model/product_bloc.dart';
+import 'package:sonic_summit_mobile_app/features/cart/data/data_source/remote_data_source/cart_remote_data_source.dart';
+import 'package:sonic_summit_mobile_app/features/cart/data/repository/cart_remote_repository.dart';
+import 'package:sonic_summit_mobile_app/features/cart/domain/repository/cart_repository.dart';
+import 'package:sonic_summit_mobile_app/features/cart/domain/use_case/get_cart_usecase.dart';
+import 'package:sonic_summit_mobile_app/features/cart/presentation/view_model/cart_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/home/presentation/view_model/home_cubit.dart';
 import 'package:sonic_summit_mobile_app/features/splash/presentation/view_model/splash_cubit.dart';
 
@@ -45,6 +50,9 @@ Future<void> initDependencies() async {
 
   // Initialize Product-related dependencies
   await _initProductDependencies();
+  
+  await _initCartDependencies();
+
 }
 
 Future<void> _initSharedPreferences() async {
@@ -159,3 +167,24 @@ _initProductDependencies() async {
   );
 }
 
+_initCartDependencies() async {
+  // =========================== Data Source ===========================
+  getIt.registerLazySingleton<CartRemoteDataSource>(
+    () => CartRemoteDataSource(dio: getIt<Dio>(), tokenSharedPrefs: getIt<TokenSharedPrefs>()),  // Register Cart Remote Data Source
+  );
+
+  // =========================== Repository ===========================
+  getIt.registerLazySingleton<ICartRepository>(
+    () => CartRemoteRepository(remoteDataSource: getIt<CartRemoteDataSource>()), // Register Cart Repository
+  );
+
+  // =========================== Usecases ===========================
+  getIt.registerLazySingleton<GetCartUseCase>(
+    () => GetCartUseCase(cartRepository: getIt<ICartRepository>()), // Usecase for getting the cart
+  );
+
+  // =========================== Bloc ===========================
+  getIt.registerFactory<CartBloc>(
+    () => CartBloc(getCartUseCase: getIt<GetCartUseCase>()), // CartBloc to manage Cart State
+  );
+}

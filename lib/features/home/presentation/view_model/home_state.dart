@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sonic_summit_mobile_app/app/di/di.dart';
 import 'package:sonic_summit_mobile_app/features/browse/presentation/view/product_view.dart';
 import 'package:sonic_summit_mobile_app/features/browse/presentation/view_model/product_bloc.dart';
+import 'package:sonic_summit_mobile_app/features/cart/presentation/view/cart_view.dart';
+import 'package:sonic_summit_mobile_app/features/cart/presentation/view_model/cart_bloc.dart';
 
 class HomeState extends Equatable {
   final int selectedIndex;
@@ -25,6 +27,10 @@ class HomeState extends Equatable {
         BlocProvider(
           create: (context) => getIt<ProductBloc>(),
           child: ProductView(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<CartBloc>(),
+          child: CartView(),
         ),
         const Center(
           child: Text('Cart'),
