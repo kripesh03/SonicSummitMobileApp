@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sonic_summit_mobile_app/core/common/snackbar/snackbar.dart';
 import 'package:sonic_summit_mobile_app/features/auth/domain/use_case/login_usecase.dart';
 import 'package:sonic_summit_mobile_app/features/auth/presentation/view_model/signup/register_bloc.dart';
+import 'package:sonic_summit_mobile_app/features/home/presentation/view/home_view.dart';
 import 'package:sonic_summit_mobile_app/features/home/presentation/view_model/home_cubit.dart';
-import 'package:sonic_summit_mobile_app/features/home/presentation/view/dashboard_view.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -77,7 +77,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             add(
               NavigateHomeScreenEvent(
                 context: event.context,
-                destination: const DashboardScreen(),
+                destination:  const HomeView(),
               ),
             );
             //_homeCubit.setToken(token);

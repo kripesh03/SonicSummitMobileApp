@@ -13,8 +13,15 @@ import 'package:sonic_summit_mobile_app/features/auth/domain/use_case/register_u
 import 'package:sonic_summit_mobile_app/features/auth/domain/use_case/upload_iamge_usecase.dart';
 import 'package:sonic_summit_mobile_app/features/auth/presentation/view_model/login/login_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/auth/presentation/view_model/signup/register_bloc.dart';
+import 'package:sonic_summit_mobile_app/features/browse/data/data_source/remote_data_source/product_remote_data_source.dart';
+import 'package:sonic_summit_mobile_app/features/browse/data/repository/product_remote_repository.dart';
+import 'package:sonic_summit_mobile_app/features/browse/domain/repository/product_repository.dart';
+import 'package:sonic_summit_mobile_app/features/browse/domain/use_case/get_all_product_usecase.dart';
+import 'package:sonic_summit_mobile_app/features/browse/presentation/view_model/product_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/home/presentation/view_model/home_cubit.dart';
 import 'package:sonic_summit_mobile_app/features/splash/presentation/view_model/splash_cubit.dart';
+
+
 
 final getIt = GetIt.instance;
 
@@ -23,11 +30,21 @@ Future<void> initDependencies() async {
   await _initHiveService();
   await _initApiService();
   await _initSharedPreferences();
+  
+  // Initialize Home-related dependencies
   await _initHomeDependencies();
+
+  // Initialize Register-related dependencies
   await _initRegisterDependencies();
+
+  // Initialize Login-related dependencies
   await _initLoginDependencies();
 
+  // Initialize Splash Screen-related dependencies
   await _initSplashScreenDependencies();
+
+  // Initialize Product-related dependencies
+  await _initProductDependencies();
 }
 
 Future<void> _initSharedPreferences() async {
@@ -36,19 +53,19 @@ Future<void> _initSharedPreferences() async {
 }
 
 _initApiService() {
-  // Remote Data Source
+  // Register the API service (Dio)
   getIt.registerLazySingleton<Dio>(
     () => ApiService(Dio()).dio,
   );
 }
 
 _initHiveService() {
+  // Register Hive service
   getIt.registerLazySingleton<HiveService>(() => HiveService());
 }
 
-_initRegisterDependencies() {
-// =========================== Data Source ===========================
-
+_initRegisterDependencies() async {
+  // =========================== Data Source ===========================
   getIt.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSource(getIt<HiveService>()),
   );
@@ -58,39 +75,31 @@ _initRegisterDependencies() {
   );
 
   // =========================== Repository ===========================
-
-  getIt.registerLazySingleton(
+  getIt.registerLazySingleton<AuthLocalRepository>(
     () => AuthLocalRepository(getIt<AuthLocalDataSource>()),
   );
+  
   getIt.registerLazySingleton<AuthRemoteRepository>(
     () => AuthRemoteRepository(getIt<AuthRemoteDataSource>()),
   );
 
   // =========================== Usecases ===========================
   getIt.registerLazySingleton<RegisterUseCase>(
-    () => RegisterUseCase(
-      getIt<AuthRemoteRepository>(),
-    ),
+    () => RegisterUseCase(getIt<AuthRemoteRepository>()),
   );
 
   getIt.registerLazySingleton<UploadImageUsecase>(
-    () => UploadImageUsecase(
-      getIt<AuthRemoteRepository>(),
-    ),
+    () => UploadImageUsecase(getIt<AuthRemoteRepository>()),
   );
 
+  // =========================== Bloc ===========================
   getIt.registerFactory<RegisterBloc>(
-    () => RegisterBloc(
-      registerUseCase: getIt(),
-      uploadImageUsecase: getIt(),
-    ),
+    () => RegisterBloc(registerUseCase: getIt(), uploadImageUsecase: getIt()),
   );
 }
 
-
-
-
 _initHomeDependencies() async {
+  // Register Home-related Cubits/Bloc
   getIt.registerFactory<HomeCubit>(
     () => HomeCubit(),
   );
@@ -109,6 +118,7 @@ _initLoginDependencies() async {
     ),
   );
 
+  // =========================== Bloc ===========================
   getIt.registerFactory<LoginBloc>(
     () => LoginBloc(
       registerBloc: getIt<RegisterBloc>(),
@@ -119,7 +129,33 @@ _initLoginDependencies() async {
 }
 
 _initSplashScreenDependencies() async {
+  // Register Splash-related Cubits
   getIt.registerFactory<SplashCubit>(
     () => SplashCubit(getIt<LoginBloc>()),
   );
 }
+
+// Product-related initialization
+
+_initProductDependencies() async {
+  // =========================== Data Source ===========================
+  getIt.registerLazySingleton<ProductRemoteDataSource>(
+    () => ProductRemoteDataSource(dio: getIt<Dio>()), // Register the remote data source for products
+  );
+
+  // =========================== Repository ===========================
+  getIt.registerLazySingleton<IProductRepository>(
+    () => ProductRemoteRepository(remoteDataSource: getIt<ProductRemoteDataSource>()), // Register the IProductRepository interface to the ProductRemoteRepository
+  );
+
+  // =========================== Usecases ===========================
+  getIt.registerLazySingleton<GetAllProductUseCase>(
+    () => GetAllProductUseCase(productRepository: getIt<IProductRepository>()), // Usecase for getting all products
+  );
+
+  // =========================== Bloc ===========================
+  getIt.registerFactory<ProductBloc>(
+    () => ProductBloc(getAllProductUseCase: getIt<GetAllProductUseCase>()), 
+  );
+}
+

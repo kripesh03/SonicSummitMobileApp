@@ -1,5 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sonic_summit_mobile_app/app/di/di.dart';
+import 'package:sonic_summit_mobile_app/features/browse/presentation/view/product_view.dart';
+import 'package:sonic_summit_mobile_app/features/browse/presentation/view_model/product_bloc.dart';
 
 class HomeState extends Equatable {
   final int selectedIndex;
@@ -12,13 +16,20 @@ class HomeState extends Equatable {
 
   // Initial state
   static HomeState initial() {
-    return const HomeState(
+    return HomeState(
       selectedIndex: 0,
       views: [
-        Center(
+        const Center(
           child: Text('Dashboard'),
         ),
-        Center(
+        BlocProvider(
+          create: (context) => getIt<ProductBloc>(),
+          child: ProductView(),
+        ),
+        const Center(
+          child: Text('Cart'),
+        ),
+        const Center(
           child: Text('Account'),
         ),
       ],
