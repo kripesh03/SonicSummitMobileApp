@@ -7,15 +7,18 @@ class TokenSharedPrefs {
 
   TokenSharedPrefs(this._sharedPreferences);
 
-  Future<Either<Failure, void>> saveToken(String token) async {
+  // Save token and userId
+  Future<Either<Failure, void>> saveAuthData(String token, String userId) async {
     try {
       await _sharedPreferences.setString('token', token);
-      return Right(null);
+      await _sharedPreferences.setString('userId', userId);
+      return Right(null); // Successfully saved
     } catch (e) {
-      return Left(SharedPrefsFailure(message: e.toString()));
+      return Left(SharedPrefsFailure(message: e.toString())); // Handling errors
     }
   }
 
+  // Get token
   Future<Either<Failure, String>> getToken() async {
     try {
       final token = _sharedPreferences.getString('token');
@@ -24,5 +27,20 @@ class TokenSharedPrefs {
       return Left(SharedPrefsFailure(message: e.toString()));
     }
   }
-}
 
+  // Get userId
+  Future<Either<Failure, String>> getUserId() async {
+    try {
+      final userId = _sharedPreferences.getString('userId');
+      return Right(userId ?? '');
+    } catch (e) {
+      return Left(SharedPrefsFailure(message: e.toString()));
+    }
+  }
+
+  // Clear auth data (if needed for logout)
+  Future<void> clearAuthData() async {
+    await _sharedPreferences.remove('token');
+    await _sharedPreferences.remove('userId');
+  }
+}

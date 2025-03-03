@@ -27,17 +27,16 @@ class AuthRemoteRepository implements IAuthRepository {
     throw UnimplementedError();
   }
 
-  @override
-  Future<Either<Failure, String>> loginUser(
-      String username, String password) async {
-    try {
-      final token =
-          await _authRemoteDataSource.loginUser(username, password);
-      return Right(token);
-    } catch (e) {
-      return Left(ApiFailure(message: e.toString()));
-    }
+@override
+Future<Either<Failure, String>> loginUser(String username, String password) async {
+  try {
+    final response = await _authRemoteDataSource.loginUser(username, password);
+    return Right(response); // Return the full response instead of just the token
+  } catch (e) {
+    return Left(ApiFailure(message: e.toString()));
   }
+}
+
 
   @override
   Future<Either<Failure, String>> uploadProfilePicture(File file) async {

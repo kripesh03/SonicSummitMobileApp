@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:sonic_summit_mobile_app/app/shared_prefs/token_shared_prefs.dart';
@@ -30,23 +32,22 @@ class LoginUseCase implements UsecaseWithParams<String, LoginParams> {
   LoginUseCase(this.repository, this.tokenSharedPrefs);
 
   @override
-  Future<Either<Failure, String>> call(LoginParams params) {
-    // Save token in Shared Preferences
-    return repository
-        .loginUser(params.username, params.password)
-        .then((value) {
-      return value.fold(
+  Future<Either<Failure, String>> call(LoginParams params) async {
+    return repository.loginUser(params.username, params.password).then((result) {
+      return result.fold(
         (failure) => Left(failure),
-        (token) {
-          tokenSharedPrefs.saveToken(token);
-          tokenSharedPrefs.getToken().then((value) {
-            print(value);
-          });
+        (response) async {
+          // Extract token and userId from the API response
+          final Map<String, dynamic> decodedResponse = jsonDecode(response);
+          final token = decodedResponse['token'];
+          final userId = decodedResponse['userId'];
+
+          // Save them in shared preferences
+          await tokenSharedPrefs.saveAuthData(token, userId);
+
           return Right(token);
         },
       );
     });
   }
 }
-
-

@@ -17,54 +17,65 @@ class CartRemoteDataSource {
   })  : _dio = dio,
         _tokenSharedPrefs = tokenSharedPrefs;
 
- Future<List<CartEntity>> getCart() async {
-  try {
-    var response = await _dio.get(ApiEndpoints.getCart("67c419ff20ecd69cd9fc327c"));
+  Future<List<CartEntity>> getCart() async {
+    try {
+      // Retrieve the userId from SharedPreferences
+      final userIdResult = await _tokenSharedPrefs.getUserId();
 
-    // Debug: Print full response data for inspection
-    print('Full response data: ${jsonEncode(response.data)}');
+      // Check if retrieving the userId was successful
+      final userId = userIdResult.fold(
+        (failure) {
+          throw Exception('Failed to retrieve userId from SharedPreferences: ${failure.message}');
+        },
+        (userId) => userId,
+      );
 
-    if (response.statusCode == 200) {
-      // Check if response.data is not null and is a Map
-      if (response.data != null) {
-        if (response.data is Map<String, dynamic>) {
-          Map<String, dynamic> responseData = response.data;
+      // Check if userId is not empty
+      if (userId.isEmpty) {
+        throw Exception('User ID is empty');
+      }
 
-          // Extract the 'items' list from responseData
-          var items = responseData['items'] as List<dynamic>?;
-          print('Items list: $items');  // Print the 'items' list for inspection
+      // Use the userId in the API call
+      final response = await _dio.get(ApiEndpoints.getCart(userId));
 
-          if (items != null) {
-            // Debug: Check the structure of the items
-            print('Items structure: ${jsonEncode(items)}');
+      // Debug: Print full response data for inspection
+      print('Full response data: ${jsonEncode(response.data)}');
 
-            // Wrap the 'items' into a map if necessary for the DTO
-            Map<String, dynamic> dtoMap = {
-              'items': items,  // Ensure the DTO can handle this structure
-            };
+      if (response.statusCode == 200) {
+        // Check if response.data is not null and is a Map
+        if (response.data != null) {
+          if (response.data is Map<String, dynamic>) {
+            Map<String, dynamic> responseData = response.data;
 
-            // Now pass this into the GetCartDTO.fromJson method
-            GetCartDTO cartDTO = GetCartDTO.fromJson(dtoMap);
+            // Extract the 'items' list from responseData
+            var items = responseData['items'] as List<dynamic>?;
 
-            return CartApiModel.toEntityList(cartDTO.data);
+            if (items != null) {
+              // Wrap the 'items' into a map if necessary for the DTO
+              Map<String, dynamic> dtoMap = {
+                'items': items,  // Ensure the DTO can handle this structure
+              };
+
+              // Now pass this into the GetCartDTO.fromJson method
+              GetCartDTO cartDTO = GetCartDTO.fromJson(dtoMap);
+
+              return CartApiModel.toEntityList(cartDTO.data);
+            } else {
+              throw Exception('Items list is null in response data');
+            }
           } else {
-            throw Exception('Items list is null in response data');
+            throw Exception('Response data is not of type Map<String, dynamic>');
           }
         } else {
-          throw Exception('Response data is not of type Map<String, dynamic>');
+          throw Exception('Response data is null');
         }
       } else {
-        throw Exception('Response data is null');
+        throw Exception('Failed to fetch cart. Status code: ${response.statusCode}');
       }
-    } else {
-      throw Exception('Failed to fetch cart. Status code: ${response.statusCode}');
+    } on DioException catch (e) {
+      throw Exception('Dio error: $e');
+    } catch (e) {
+      throw Exception('Unknown error: $e');
     }
-  } on DioException catch (e) {
-    throw Exception('Dio error: $e');
-  } catch (e) {
-    throw Exception('Unknown error: $e');
   }
-}
-
-
 }
