@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sonic_summit_mobile_app/app/di/di.dart';
 import 'package:sonic_summit_mobile_app/features/cart/presentation/view_model/cart_bloc.dart';
+import 'package:sonic_summit_mobile_app/features/order/presentation/view/order_view.dart';
+import 'package:sonic_summit_mobile_app/features/order/presentation/view_model/order_bloc.dart';
 
 class CartView extends StatelessWidget {
   const CartView({super.key});
@@ -41,25 +44,18 @@ class CartView extends StatelessWidget {
                 } else if (state.cart.isEmpty) {
                   return const Center(child: Text('No Items in Cart'));
                 } else {
-                  // Assuming CartEntity has a list of CartItemEntity
                   return Expanded(
                     child: ListView.builder(
-                      itemCount:
-                          state.cart.length, // state.cart is a List<CartEntity>
+                      itemCount: state.cart.length,
                       itemBuilder: (BuildContext context, index) {
                         final cartItem = state.cart[index];
-                        // Now access the CartItemEntity properties correctly
                         return Column(
                           children: cartItem.items.map((item) {
                             return ListTile(
-                              title: Text(item
-                                  .title), // Assuming CartItemEntity has productId
-                              subtitle: Text(
-                                'Price: ${item.newPrice}', // Assuming CartItemEntity has quantity
-                              ),
+                              title: Text(item.title),
+                              subtitle: Text('Price: ${item.newPrice}'),
                               trailing: IconButton(
-                                icon:
-                                    const Icon(Icons.delete, color: Colors.red),
+                                icon: const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
                                   // Trigger the delete event with the item ID
                                   BlocProvider.of<CartBloc>(context).add(
@@ -74,6 +70,25 @@ class CartView extends StatelessWidget {
                   );
                 }
               },
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                final cartItems = context.read<CartBloc>().state.cart;
+                // Pass the cartItems to the OrderView
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return BlocProvider<OrderBloc>(
+                        create: (context) => getIt<OrderBloc>(),
+                        child: OrderView(cartItems: cartItems), // Pass cartItems here
+                      );
+                    },
+                  ),
+                );
+              },
+              child: const Text('Checkout'),
             ),
           ],
         ),

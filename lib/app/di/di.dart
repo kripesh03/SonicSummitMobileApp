@@ -25,6 +25,11 @@ import 'package:sonic_summit_mobile_app/features/cart/domain/use_case/delete_car
 import 'package:sonic_summit_mobile_app/features/cart/domain/use_case/get_cart_usecase.dart';
 import 'package:sonic_summit_mobile_app/features/cart/presentation/view_model/cart_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/home/presentation/view_model/home_cubit.dart';
+import 'package:sonic_summit_mobile_app/features/order/data/data_source/remote_data_source/order_remote_data_source.dart';
+import 'package:sonic_summit_mobile_app/features/order/data/repository/order_remote_repository.dart';
+import 'package:sonic_summit_mobile_app/features/order/domain/repository/order_repository.dart';
+import 'package:sonic_summit_mobile_app/features/order/domain/use_case/create_order_use_case.dart';
+import 'package:sonic_summit_mobile_app/features/order/presentation/view_model/order_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/splash/presentation/view_model/splash_cubit.dart';
 
 
@@ -53,6 +58,9 @@ Future<void> initDependencies() async {
   await _initProductDependencies();
   
   await _initCartDependencies();
+
+  await _initOrderDependencies();
+
 
 }
 
@@ -199,5 +207,34 @@ _initCartDependencies() async {
       cartRemoteDataSource: getIt<CartRemoteDataSource>(),  // Register CartRemoteDataSource
       tokenSharedPrefs: getIt<TokenSharedPrefs>(),          // Register TokenSharedPrefs
     ),
+  );
+}
+
+
+_initOrderDependencies() async {
+  // =========================== Data Source ===========================
+  getIt.registerLazySingleton<OrderRemoteDataSource>(
+    () => OrderRemoteDataSource(
+      dio: getIt<Dio>(), 
+      tokenSharedPrefs: getIt<TokenSharedPrefs>(), // Inject TokenSharedPrefs
+    ),
+  );
+
+  // =========================== Repository ===========================
+  getIt.registerLazySingleton<IOrderRepository>(
+    () => OrderRemoteRepository(
+      remoteDataSource: getIt<OrderRemoteDataSource>(), // Inject OrderRemoteDataSource
+      tokenSharedPrefs: getIt<TokenSharedPrefs>(), // Inject TokenSharedPrefs
+    ),
+  );
+
+  // =========================== Usecases ===========================
+  getIt.registerLazySingleton<CreateOrderUseCase>(
+    () => CreateOrderUseCase(orderRepository: getIt<IOrderRepository>()), // Usecase for placing an order
+  );
+
+  // =========================== Bloc ===========================
+  getIt.registerFactory<OrderBloc>(
+    () => OrderBloc(createOrderUseCase: getIt<CreateOrderUseCase>()), // Register OrderBloc with CreateOrderUseCase
   );
 }
