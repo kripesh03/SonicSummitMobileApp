@@ -5,8 +5,6 @@ class ApiEndpoints {
   static const Duration receiveTimeout = Duration(seconds: 1000);
   static const String baseUrl = "http://10.0.2.2:3000/api/";
 
-  
-
   // static const String baseUrl = "http://192.168.1.6:3000/api/";
 
   // ====================== Auth Routes ======================
@@ -18,6 +16,7 @@ class ApiEndpoints {
   static const String uploadImage = "auth/uploadImage";
 
   static const String getAllProducts = "product";
+  static const String productimageUrl = "http://10.0.2.2:3000";
 
   static String getCart(String userId) {
     return "cart/$userId"; // Append userId to the cart endpoint

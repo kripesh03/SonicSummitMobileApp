@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sonic_summit_mobile_app/app/constants/api_endpoints.dart';
 import 'package:sonic_summit_mobile_app/features/browse/presentation/view_model/product_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/cart/presentation/view_model/cart_bloc.dart';
 
@@ -46,11 +47,30 @@ class ProductView extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final product = productState.products[index];
 
+                      // Ensure the full image URL is created without 'uploads' in the path
+                      final productImageUrl = product.productImage != null
+                          ? '${ApiEndpoints.productimageUrl}${product.productImage}'.replaceFirst(RegExp(r'/?images'), '/images')
+                          : null;
+
+                      // Print the image URL for debugging
+                      debugPrint('Image URL for product "${product.title}": $productImageUrl');
+
                       return ListTile(
+                        leading: productImageUrl != null
+                            ? Image.network(
+                                productImageUrl,
+                                width: 50, // Set width for image
+                                height: 50, // Set height for image
+                                fit: BoxFit.cover, // Fit the image properly in the space
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.error); // Fallback icon if image fails to load
+                                },
+                              )
+                            : const Icon(Icons.image_not_supported), // Fallback icon when image is null
                         title: Text(product.title),
                         subtitle: Text(product.description),
                         trailing: SizedBox(
-                          width: 50, // Constrain trailing widget width
+                          width: 50,
                           child: IconButton(
                             icon: const Icon(Icons.add_shopping_cart),
                             onPressed: () {

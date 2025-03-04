@@ -12,6 +12,7 @@ class ProductApiModel extends Equatable {
   final double newPrice;
   final String category;
   final bool trending;
+  final String? productImage;  // Added the productImage field
 
   const ProductApiModel({
     this.id,
@@ -22,6 +23,7 @@ class ProductApiModel extends Equatable {
     required this.newPrice,
     required this.category,
     this.trending = false,
+    this.productImage,  // Added productImage to the constructor
   });
 
   const ProductApiModel.empty()
@@ -32,7 +34,8 @@ class ProductApiModel extends Equatable {
         oldPrice = 0.0,
         newPrice = 0.0,
         category = '',
-        trending = false;
+        trending = false,
+        productImage = null;  // Default value for productImage
 
   // From Json
   factory ProductApiModel.fromJson(Map<String, dynamic> json) {
@@ -45,6 +48,7 @@ class ProductApiModel extends Equatable {
       newPrice: _parseDecimal(json['new_price']),
       category: json['category'],
       trending: json['trending'] ?? false,
+      productImage: json['productImage'],  // Handle productImage field from JSON
     );
   }
 
@@ -68,6 +72,7 @@ class ProductApiModel extends Equatable {
       'new_price': {'\$numberDecimal': newPrice},
       'category': category,
       'trending': trending,
+      'productImage': productImage,  // Include productImage in the JSON
     };
   }
 
@@ -81,6 +86,7 @@ class ProductApiModel extends Equatable {
         newPrice: newPrice,
         category: category,
         trending: trending,
+        productImage: productImage,  // Include productImage in the entity
       );
 
   // Convert API List to Entity List
@@ -97,5 +103,6 @@ class ProductApiModel extends Equatable {
         newPrice,
         category,
         trending,
+        productImage,  // Include productImage in comparison
       ];
 }

@@ -9,6 +9,7 @@ class ProductEntity extends Equatable {
   final double newPrice;
   final String category;
   final bool trending;
+  final String? productImage;  // Added the productImage field
 
   const ProductEntity({
     this.id,
@@ -19,6 +20,7 @@ class ProductEntity extends Equatable {
     required this.newPrice,
     required this.category,
     this.trending = false,
+    this.productImage,  // Added the productImage parameter in the constructor
   });
 
   const ProductEntity.empty()
@@ -29,7 +31,8 @@ class ProductEntity extends Equatable {
         oldPrice = 0.0,
         newPrice = 0.0,
         category = '',
-        trending = false;
+        trending = false,
+        productImage = null;  // Default value for productImage
 
   @override
   List<Object?> get props => [
@@ -41,5 +44,6 @@ class ProductEntity extends Equatable {
         newPrice,
         category,
         trending,
+        productImage,  // Include productImage in the comparison
       ];
 }
