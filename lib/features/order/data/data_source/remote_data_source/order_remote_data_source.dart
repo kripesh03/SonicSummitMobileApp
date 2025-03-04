@@ -16,50 +16,54 @@ class OrderRemoteDataSource {
   })  : _dio = dio,
         _tokenSharedPrefs = tokenSharedPrefs;
 
-  Future<OrderEntity> createOrder(String name, String phone) async {
-    try {
-      final userIdResult = await _tokenSharedPrefs.getUserId();
-      final userId = userIdResult.fold(
-        (failure) {
-          throw Exception('Failed to retrieve userId from SharedPreferences: ${failure.message}');
-        },
-        (userId) => userId,
-      );
+Future<OrderEntity> createOrder(String name, String phone) async {
+  try {
+    final userIdResult = await _tokenSharedPrefs.getUserId();
+    final userId = userIdResult.fold(
+      (failure) {
+        throw Exception('Failed to retrieve userId from SharedPreferences: ${failure.message}');
+      },
+      (userId) {
+        print("User ID: $userId"); // Debug User ID
+        return userId;
+      },
+    );
 
-      final createOrderDTO = CreateOrderDTO(userId: userId, name: name, phone: phone);
-      final requestData = createOrderDTO.toJson();
+    final createOrderDTO = CreateOrderDTO(userId: userId, name: name, phone: phone);
+    final requestData = createOrderDTO.toJson();
 
-      // Debugging: Print request payload
-      print("Sending Order Request: $requestData");
+    // Debugging: Print request payload
+    print("Sending Order Request: $requestData");
 
-      final response = await _dio.post(
-        ApiEndpoints.createOrder,
-        data: requestData,
-      );
+    final response = await _dio.post(
+      ApiEndpoints.createOrder,
+      data: requestData,
+    );
 
-      // Debugging: Print raw response
-      print("Order API Response: ${response.data}");
+    // Debugging: Print raw response
+    print("Order API Response: ${response.data}");
 
-      if (response.statusCode == 200) {
-        final orderData = response.data;
-        final orderApiModel = OrderApiModel.fromJson(orderData['order']);
+    if (response.statusCode == 200) {
+      final orderData = response.data;
+      final orderApiModel = OrderApiModel.fromJson(orderData['order']);
 
-        return orderApiModel.toEntity();
-      } else {
-        throw Exception('Failed to create order: ${response.statusCode}, ${response.data}');
-      }
-    } on DioException catch (e) {
-      // Debugging: Print detailed Dio error info
-      print("Dio Error - Type: ${e.type}, Message: ${e.message}");
-      if (e.response != null) {
-        print("Dio Error - Response Data: ${e.response?.data}");
-        print("Dio Error - Response Status Code: ${e.response?.statusCode}");
-      }
-      throw Exception('Dio error: ${e.message}, StatusCode: ${e.response?.statusCode}, Data: ${e.response?.data}');
-    } catch (e) {
-      // Debugging: Print any unknown error
-      print("Unknown error occurred: $e");
-      throw Exception('Unknown error: $e');
+      // Debugging: Print parsed order data
+      print("Parsed Order Data: $orderApiModel");
+
+      return orderApiModel.toEntity();
+    } else {
+      throw Exception('Failed to create order: ${response.statusCode}, ${response.data}');
     }
+  } on DioException catch (e) {
+    print("Dio Error - Type: ${e.type}, Message: ${e.message}");
+    if (e.response != null) {
+      print("Dio Error - Response Data: ${e.response?.data}");
+      print("Dio Error - Response Status Code: ${e.response?.statusCode}");
+    }
+    throw Exception('Dio error: ${e.message}, StatusCode: ${e.response?.statusCode}, Data: ${e.response?.data}');
+  } catch (e) {
+    print("Unknown error occurred: $e");
+    throw Exception('Unknown error: $e');
   }
+}
 }

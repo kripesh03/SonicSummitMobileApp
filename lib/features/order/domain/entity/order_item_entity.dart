@@ -6,7 +6,7 @@ class OrderItemEntity extends Equatable {
   final int quantity;
   final double price;
 
-  OrderItemEntity({
+  const OrderItemEntity({
     required this.productId,
     required this.productName,
     required this.quantity,
@@ -21,8 +21,9 @@ class OrderItemEntity extends Equatable {
       productId: product['_id'],
       productName: product['title'],
       quantity: 1, // Assuming 1 per product, modify as needed
-      price: (product['new_price'] as Map<String, dynamic>)['\$numberDecimal']
-          as double,
+      price: double.tryParse(
+              product['new_price']?['\$numberDecimal']?.toString() ?? '0') ??
+          0,
     );
   }
 }

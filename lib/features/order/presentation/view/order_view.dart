@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sonic_summit_mobile_app/core/common/snackbar/snackbar.dart';
 import 'package:sonic_summit_mobile_app/features/cart/domain/entity/cart_entity.dart';
 import 'package:sonic_summit_mobile_app/features/order/presentation/view_model/order_bloc.dart';
 
@@ -49,16 +50,19 @@ class _OrderViewState extends State<OrderView> {
             BlocConsumer<OrderBloc, OrderState>(
               listener: (context, state) {
                 if (state is OrderPlaced) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Order placed successfully!')),
+                  showMySnackBar(
+                    context: context,
+                    message: 'Order placed successfully!',
+                    color: Colors.green,
                   );
-                  Navigator.pop(
-                      context); // Go back after successful order placement
+                  Navigator.pop(context); // Go back after successful order placement
                 } else if (state is OrderFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text('Failed to place order: ${state.error}')),
+                  showMySnackBar(
+                    context: context,
+                    message: 'Order placed successfully!',
+                    color: Colors.green,
                   );
+                  Navigator.pop(context); // Go back after successful order placement
                 }
               },
               builder: (context, state) {
@@ -76,9 +80,10 @@ class _OrderViewState extends State<OrderView> {
 
                     // Validate
                     if (name.isEmpty || phone.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Please fill all required fields')),
+                      showMySnackBar(
+                        context: context,
+                        message: 'Please fill all required fields',
+                        color: Colors.orange,
                       );
                       return;
                     }
@@ -93,9 +98,7 @@ class _OrderViewState extends State<OrderView> {
                     // Debugging - log the orderData map
                     print("Order Data: $orderData");
 
-                    context
-                        .read<OrderBloc>()
-                        .add(CreateOrder(orderData: orderData));
+                    context.read<OrderBloc>().add(CreateOrder(orderData: orderData));
                   },
                   child: const Text('Place Order'),
                 );
