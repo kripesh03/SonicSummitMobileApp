@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:sonic_summit_mobile_app/app/constants/api_endpoints.dart';
 import 'package:sonic_summit_mobile_app/app/shared_prefs/token_shared_prefs.dart';
 import 'package:sonic_summit_mobile_app/features/cart/data/dto/get_cart_dto.dart';
@@ -78,4 +79,51 @@ class CartRemoteDataSource {
       throw Exception('Unknown error: $e');
     }
   }
+
+
+  Future<void> addToCart(String userId, String productId) async {
+  try {
+    final response = await _dio.post(
+      "${ApiEndpoints.baseUrl}cart/add",
+      data: {
+        "userId": userId,
+        "productId": productId,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint('Product added to cart successfully.');
+    } else {
+      throw Exception('Failed to add product to cart: ${response.statusCode}');
+    }
+  } on DioException catch (e) {
+    throw Exception('Dio error: $e');
+  } catch (e) {
+    throw Exception('Unknown error: $e');
+  }
+}
+
+Future<void> removeItemFromCart(String userId, String productId) async {
+    try {
+      final response = await _dio.post(
+        "${ApiEndpoints.baseUrl}cart/remove",
+        data: {
+          "userId": userId,
+          "productId": productId,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        debugPrint('Product removed from cart successfully.');
+      } else {
+        throw Exception('Failed to remove product from cart: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      throw Exception('Dio error: $e');
+    } catch (e) {
+      throw Exception('Unknown error: $e');
+    }
+  }
+
+
 }

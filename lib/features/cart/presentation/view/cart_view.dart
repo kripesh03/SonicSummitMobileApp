@@ -7,7 +7,7 @@ class CartView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Add this to trigger the event to load cart
+    // Add this to trigger the event to load the cart
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<CartBloc>(context).add(LoadCart());
     });
@@ -44,16 +44,27 @@ class CartView extends StatelessWidget {
                   // Assuming CartEntity has a list of CartItemEntity
                   return Expanded(
                     child: ListView.builder(
-                      itemCount: state.cart.length, // state.cart is a List<CartEntity>
+                      itemCount:
+                          state.cart.length, // state.cart is a List<CartEntity>
                       itemBuilder: (BuildContext context, index) {
                         final cartItem = state.cart[index];
                         // Now access the CartItemEntity properties correctly
                         return Column(
                           children: cartItem.items.map((item) {
                             return ListTile(
-                              title: Text(item.title), // Assuming CartItemEntity has productId
+                              title: Text(item
+                                  .title), // Assuming CartItemEntity has productId
                               subtitle: Text(
                                 'Price: ${item.newPrice}', // Assuming CartItemEntity has quantity
+                              ),
+                              trailing: IconButton(
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  // Trigger the delete event with the item ID
+                                  BlocProvider.of<CartBloc>(context).add(
+                                      DeleteFromCart(productId: item.itemId));
+                                },
                               ),
                             );
                           }).toList(),

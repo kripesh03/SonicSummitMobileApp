@@ -24,13 +24,20 @@ class HomeState extends Equatable {
         const Center(
           child: Text('Dashboard'),
         ),
-        BlocProvider(
+        // Provide both ProductBloc and CartBloc in the widget tree
+        BlocProvider<ProductBloc>(
           create: (context) => getIt<ProductBloc>(),
-          child: ProductView(),
+          child: BlocProvider<CartBloc>(
+            create: (context) => getIt<CartBloc>(),
+            child: ProductView(),
+          ),
         ),
-        BlocProvider(
-          create: (context) => getIt<CartBloc>(),
-          child: CartView(),
+        BlocProvider<ProductBloc>(
+          create: (context) => getIt<ProductBloc>(),
+          child: BlocProvider<CartBloc>(
+            create: (context) => getIt<CartBloc>(),
+            child: CartView(),
+          ),
         ),
         const Center(
           child: Text('Cart'),

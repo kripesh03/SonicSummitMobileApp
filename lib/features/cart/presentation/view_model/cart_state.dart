@@ -1,5 +1,7 @@
 part of 'cart_bloc.dart';
 
+// cart_state.dart
+
 class CartState extends Equatable {
   final List<CartEntity> cart;
   final bool isLoading;

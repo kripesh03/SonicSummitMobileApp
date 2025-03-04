@@ -21,6 +21,7 @@ import 'package:sonic_summit_mobile_app/features/browse/presentation/view_model/
 import 'package:sonic_summit_mobile_app/features/cart/data/data_source/remote_data_source/cart_remote_data_source.dart';
 import 'package:sonic_summit_mobile_app/features/cart/data/repository/cart_remote_repository.dart';
 import 'package:sonic_summit_mobile_app/features/cart/domain/repository/cart_repository.dart';
+import 'package:sonic_summit_mobile_app/features/cart/domain/use_case/delete_cart_item_usecase.dart';
 import 'package:sonic_summit_mobile_app/features/cart/domain/use_case/get_cart_usecase.dart';
 import 'package:sonic_summit_mobile_app/features/cart/presentation/view_model/cart_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/home/presentation/view_model/home_cubit.dart';
@@ -170,12 +171,15 @@ _initProductDependencies() async {
 _initCartDependencies() async {
   // =========================== Data Source ===========================
   getIt.registerLazySingleton<CartRemoteDataSource>(
-    () => CartRemoteDataSource(dio: getIt<Dio>(), tokenSharedPrefs: getIt<TokenSharedPrefs>()),  // Register Cart Remote Data Source
+    () => CartRemoteDataSource(dio: getIt<Dio>(), tokenSharedPrefs: getIt<TokenSharedPrefs>()), // Register Cart Remote Data Source
   );
 
   // =========================== Repository ===========================
   getIt.registerLazySingleton<ICartRepository>(
-    () => CartRemoteRepository(remoteDataSource: getIt<CartRemoteDataSource>()), // Register Cart Repository
+    () => CartRemoteRepository(
+      remoteDataSource: getIt<CartRemoteDataSource>(),
+      tokenSharedPrefs: getIt<TokenSharedPrefs>(),  // Register TokenSharedPrefs as well
+    ),
   );
 
   // =========================== Usecases ===========================
@@ -183,8 +187,17 @@ _initCartDependencies() async {
     () => GetCartUseCase(cartRepository: getIt<ICartRepository>()), // Usecase for getting the cart
   );
 
+  // Register DeleteCartItemUseCase
+  getIt.registerLazySingleton<DeleteCartItemUseCase>(
+    () => DeleteCartItemUseCase(cartRepository: getIt<ICartRepository>()), // Usecase for deleting cart items
+  );
+
   // =========================== Bloc ===========================
   getIt.registerFactory<CartBloc>(
-    () => CartBloc(getCartUseCase: getIt<GetCartUseCase>()), // CartBloc to manage Cart State
+    () => CartBloc(
+      getCartUseCase: getIt<GetCartUseCase>(),              // Register GetCartUseCase
+      cartRemoteDataSource: getIt<CartRemoteDataSource>(),  // Register CartRemoteDataSource
+      tokenSharedPrefs: getIt<TokenSharedPrefs>(),          // Register TokenSharedPrefs
+    ),
   );
 }

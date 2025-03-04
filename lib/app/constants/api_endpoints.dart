@@ -18,4 +18,7 @@ static String getCart(String userId) {
     return "cart/$userId";  // Append userId to the cart endpoint
   }
 
+  static const String addToCart = "cart/add";
+  static const String removeFromCart = "cart/remove"; 
+
 }
