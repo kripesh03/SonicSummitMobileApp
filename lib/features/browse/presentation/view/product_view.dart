@@ -48,7 +48,7 @@ class ProductView extends StatelessWidget {
 
                       return ListTile(
                         title: Text(product.title),
-                        subtitle: Text(product.artistName),
+                        subtitle: Text(product.description),
                         trailing: SizedBox(
                           width: 50, // Constrain trailing widget width
                           child: IconButton(

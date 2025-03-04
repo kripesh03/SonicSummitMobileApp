@@ -11,24 +11,27 @@ class CartApiModel extends Equatable {
   @JsonKey(name: '_id')
   final String? id;
   final ProductApiModel product;
-  @JsonKey(name: 'itemId')  // Add itemId to match the API field name
-  final String itemId;  // Added itemId field
+  @JsonKey(name: 'itemId')
+  final String itemId;
+  @JsonKey(name: 'totalPrice')  // Added totalPrice field
+  final double totalPrice;  // Added totalPrice field
 
   const CartApiModel({
     this.id,
     required this.product,
-    required this.itemId,  // Include itemId as a required parameter
+    required this.itemId,
+    required this.totalPrice,  // Include totalPrice as a required parameter
   });
 
   // From JSON
   factory CartApiModel.fromJson(Map<String, dynamic> json) {
-  return CartApiModel(
-    id: json['_id'],
-    product: ProductApiModel.fromJson(json['productId']),
-    itemId: json['productId']?['_id'],  // Keep itemId nullable
-  );
-}
-
+    return CartApiModel(
+      id: json['_id'],
+      product: ProductApiModel.fromJson(json['productId']),
+      itemId: json['productId']?['_id'],  // Keep itemId nullable
+      totalPrice: json['totalPrice']?.toDouble() ?? 0.0,  // Add totalPrice conversion
+    );
+  }
 
   // To JSON
   Map<String, dynamic> toJson() => _$CartApiModelToJson(this);
@@ -37,13 +40,12 @@ class CartApiModel extends Equatable {
   CartEntity toEntity() => CartEntity(
         id: id,
         items: [
-          // Map the product to a CartItemEntity, now passing itemId as well
           CartItemEntity(
             title: product.title ?? '',
             newPrice: product.newPrice,
-            itemId: itemId,  // Pass itemId to CartItemEntity
+            itemId: itemId,
           )
-        ],
+        ], totalPrice: totalPrice,
       );
 
   // Convert API List to Entity List
@@ -51,5 +53,5 @@ class CartApiModel extends Equatable {
       models.map((model) => model.toEntity()).toList();
 
   @override
-  List<Object?> get props => [id, product, itemId];  // Add itemId to the Equatable props
+  List<Object?> get props => [id, product, itemId, totalPrice];  // Add totalPrice to the Equatable props
 }
