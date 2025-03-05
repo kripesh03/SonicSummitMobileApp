@@ -1,9 +1,10 @@
+import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 import 'package:sonic_summit_mobile_app/app/di/di.dart';
 import 'package:sonic_summit_mobile_app/core/common/snackbar/snackbar.dart';
-import 'package:sonic_summit_mobile_app/features/browse/presentation/view/product_view.dart';
-import 'package:sonic_summit_mobile_app/features/cart/presentation/view/cart_view.dart';
 import 'package:sonic_summit_mobile_app/features/browse/presentation/view_model/product_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/cart/presentation/view_model/cart_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/home/presentation/view_model/home_cubit.dart';
@@ -17,6 +18,50 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
+  static const double shakeThreshold = 15.0; // Adjust sensitivity
+  bool _isShakeActionAllowed = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _listenToShake();
+  }
+
+  @override
+  void dispose() {
+    _accelerometerSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _listenToShake() {
+    _accelerometerSubscription = accelerometerEvents.listen((event) {
+      double acceleration =
+          sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
+
+      if (_isShakeActionAllowed && acceleration > shakeThreshold) {
+        _logout();
+      }
+    });
+  }
+
+  void _logout() {
+    _isShakeActionAllowed = false;
+
+    showMySnackBar(
+      context: context,
+      message: "Shake detected! Logging out...",
+      color: Colors.red,
+    );
+
+    context.read<HomeCubit>().logout(context);
+
+    // Prevent multiple logouts within 2 seconds
+    Future.delayed(const Duration(seconds: 2), () {
+      _isShakeActionAllowed = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,3 +131,4 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 }
+
