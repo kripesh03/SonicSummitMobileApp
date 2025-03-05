@@ -66,16 +66,19 @@ class ProfileView extends StatelessWidget {
                     return const Center(child: Text('No Profile Found'));
                   } else {
                     final user = state.user!;
+                    final profileImageUrl = user.profilePicture != null &&
+                            user.profilePicture!.isNotEmpty
+                        ? 'http://10.0.2.2:3000/images/${user.profilePicture}'
+                        : null;
+
                     return Column(
                       children: [
                         CircleAvatar(
                           radius: 50,
-                          backgroundImage: user.profilePicture != null &&
-                                  user.profilePicture!.isNotEmpty
-                              ? NetworkImage(user.profilePicture!)
+                          backgroundImage: profileImageUrl != null
+                              ? NetworkImage(profileImageUrl)
                               : null,
-                          child: user.profilePicture == null ||
-                                  user.profilePicture!.isEmpty
+                          child: profileImageUrl == null
                               ? const Icon(Icons.person, size: 50)
                               : null,
                         ),
