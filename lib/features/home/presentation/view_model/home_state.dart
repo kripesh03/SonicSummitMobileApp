@@ -6,6 +6,7 @@ import 'package:sonic_summit_mobile_app/features/browse/presentation/view/produc
 import 'package:sonic_summit_mobile_app/features/browse/presentation/view_model/product_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/cart/presentation/view/cart_view.dart';
 import 'package:sonic_summit_mobile_app/features/cart/presentation/view_model/cart_bloc.dart';
+import 'package:sonic_summit_mobile_app/features/landingpage/presentation/view/landing_page.dart';
 
 class HomeState extends Equatable {
   final int selectedIndex;
@@ -16,15 +17,12 @@ class HomeState extends Equatable {
     required this.views,
   });
 
-  // Initial state
+  // Initial state with LandingPage as the first screen
   static HomeState initial() {
     return HomeState(
       selectedIndex: 0,
       views: [
-        const Center(
-          child: Text('Dashboard'),
-        ),
-        // Provide both ProductBloc and CartBloc in the widget tree
+        const LandingPage(),
         BlocProvider<ProductBloc>(
           create: (context) => getIt<ProductBloc>(),
           child: BlocProvider<CartBloc>(
