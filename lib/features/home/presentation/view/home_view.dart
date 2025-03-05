@@ -110,7 +110,7 @@ class _HomeViewState extends State<HomeView> {
                 label: 'Explore',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.group),
+                icon: Icon(Icons.add_shopping_cart),
                 label: 'Cart',
               ),
               BottomNavigationBarItem(

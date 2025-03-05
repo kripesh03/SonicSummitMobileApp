@@ -31,6 +31,11 @@ import 'package:sonic_summit_mobile_app/features/order/data/repository/order_rem
 import 'package:sonic_summit_mobile_app/features/order/domain/repository/order_repository.dart';
 import 'package:sonic_summit_mobile_app/features/order/domain/use_case/create_order_use_case.dart';
 import 'package:sonic_summit_mobile_app/features/order/presentation/view_model/order_bloc.dart';
+import 'package:sonic_summit_mobile_app/features/profile/splash/data/data_source/remote_data_source/user_remote_data_source.dart';
+import 'package:sonic_summit_mobile_app/features/profile/splash/data/repository/user_remote_repository.dart';
+import 'package:sonic_summit_mobile_app/features/profile/splash/domain/repository/user_repository.dart';
+import 'package:sonic_summit_mobile_app/features/profile/splash/domain/use_case/get_user_usecase.dart';
+import 'package:sonic_summit_mobile_app/features/profile/splash/presentation/view_model/profile_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/splash/presentation/view_model/splash_cubit.dart';
 
 final getIt = GetIt.instance;
@@ -59,6 +64,8 @@ Future<void> initDependencies() async {
   await _initCartDependencies();
 
   await _initOrderDependencies();
+
+  await _initProfileDependencies();
 }
 
 Future<void> _initSharedPreferences() async {
@@ -261,5 +268,36 @@ _initOrderDependencies() async {
     () => OrderBloc(
         createOrderUseCase: getIt<
             CreateOrderUseCase>()), // Register OrderBloc with CreateOrderUseCase
+  );
+}
+
+
+_initProfileDependencies() async {
+  // =========================== Data Source ===========================
+  getIt.registerLazySingleton<UserRemoteDataSource>(
+    () => UserRemoteDataSource(
+      dio: getIt<Dio>(),
+      tokenSharedPrefs: getIt<TokenSharedPrefs>(),
+    ),
+  );
+
+  // =========================== Repository ===========================
+  getIt.registerLazySingleton<IUserRepository>(
+    () => UserRemoteRepository(
+      remoteDataSource: getIt<UserRemoteDataSource>(),
+      tokenSharedPrefs: getIt<TokenSharedPrefs>(),
+    ),
+  );
+
+  // =========================== Usecases ===========================
+  getIt.registerLazySingleton<GetUserUseCase>(
+    () => GetUserUseCase(
+      userRepository: getIt<IUserRepository>(),
+    ),
+  );
+
+  // =========================== Bloc ===========================
+  getIt.registerFactory<ProfileBloc>(
+    () => ProfileBloc(getUserUseCase: getIt<GetUserUseCase>()),
   );
 }

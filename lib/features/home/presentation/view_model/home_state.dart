@@ -7,6 +7,7 @@ import 'package:sonic_summit_mobile_app/features/browse/presentation/view_model/
 import 'package:sonic_summit_mobile_app/features/cart/presentation/view/cart_view.dart';
 import 'package:sonic_summit_mobile_app/features/cart/presentation/view_model/cart_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/landingpage/presentation/view/landing_page.dart';
+import 'package:sonic_summit_mobile_app/features/profile/splash/presentation/view/profile_view.dart';
 
 class HomeState extends Equatable {
   final int selectedIndex;
@@ -22,27 +23,19 @@ class HomeState extends Equatable {
     return HomeState(
       selectedIndex: 0,
       views: [
-        const LandingPage(),
+        const LandingPage(), // Example Dashboard view
         BlocProvider<ProductBloc>(
           create: (context) => getIt<ProductBloc>(),
-          child: BlocProvider<CartBloc>(
-            create: (context) => getIt<CartBloc>(),
-            child: ProductView(),
-          ),
+          child: const ProductView(),
         ),
-        BlocProvider<ProductBloc>(
-          create: (context) => getIt<ProductBloc>(),
-          child: BlocProvider<CartBloc>(
-            create: (context) => getIt<CartBloc>(),
-            child: CartView(),
-          ),
+        BlocProvider<CartBloc>(
+          create: (context) => getIt<CartBloc>(),
+          child: const CartView(),
         ),
-        const Center(
-          child: Text('Cart'),
-        ),
-        const Center(
-          child: Text('Account'),
-        ),
+        BlocProvider(
+          create: (context) => (getIt<ProductBloc>()),
+          child: const ProfileView(),
+        )
       ],
     );
   }
