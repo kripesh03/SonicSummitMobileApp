@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/auth/presentation/view/login_view.dart';
+import 'package:sonic_summit_mobile_app/features/onboarding/presentation/view_model/onboarding_cubit.dart';
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
@@ -98,12 +100,8 @@ class _OnboardingViewState extends State<OnboardingView> {
                 ElevatedButton(
                   onPressed: () {
                     if (currentPage == onboardingData.length - 1) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>  LoginView(),
-                        ),
-                      );
+                      // Trigger the navigation to login when the final page is reached
+                      context.read<OnboardingCubit>().navigateToLogin(context);
                     } else {
                       _pageController.nextPage(
                         duration: const Duration(milliseconds: 300),
