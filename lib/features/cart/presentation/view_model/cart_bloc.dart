@@ -44,7 +44,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     );
   }
 
-  Future<void> _onAddToCart(AddToCart event, Emitter<CartState> emit) async {
+Future<void> _onAddToCart(AddToCart event, Emitter<CartState> emit) async {
   try {
     final userIdResult = await _tokenSharedPrefs.getUserId();
     final userId = userIdResult.fold(
@@ -59,6 +59,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final isItemInCart = await _cartRemoteDataSource.isItemInCart(userId, event.productId);
 
     if (isItemInCart) {
+      // Emitting the error state with a message when the product is already in the cart
       emit(state.copyWith(isLoading: false, error: 'Item is already in the cart'));
     } else {
       await _cartRemoteDataSource.addToCart(userId, event.productId);
@@ -70,6 +71,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     emit(state.copyWith(isLoading: false, error: e.toString()));
   }
 }
+
 
 
   Future<void> _onDeleteFromCart(DeleteFromCart event, Emitter<CartState> emit) async {

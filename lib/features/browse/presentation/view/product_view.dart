@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sonic_summit_mobile_app/app/constants/api_endpoints.dart';
@@ -75,6 +74,55 @@ class _ProductViewState extends State<ProductView> {
         ),
         const SizedBox(height: 16),
         Expanded(
+            child: BlocListener<CartBloc, CartState>(
+          listener: (context, state) {
+            if (state.isLoading) {
+              // Show loading spinner when the state is loading
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Adding item to cart...'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            } else if (state.error != null) {
+              // Check if the error is "Item is already in the cart"
+              if (state.error == 'Item is already in the cart') {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Item already in the cart'),
+                    backgroundColor: Colors.red,
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              } else if (state.error != null &&
+                  state.error!.contains('Dio error')) {
+                // Handle Dio error specifically, without showing the full stack trace
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Item already in the cart'),
+                    backgroundColor: Colors.red,
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              } else {
+                // Show other errors (if any)
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error: ${state.error}'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            } else if (state.cart.isNotEmpty) {
+              // Show success feedback when the item is added to the cart
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Item added to cart!'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            }
+          },
           child: BlocBuilder<ProductBloc, ProductState>(
             builder: (context, productState) {
               if (productState.isLoading) {
@@ -135,48 +183,15 @@ class _ProductViewState extends State<ProductView> {
                           try {
                             final cartBloc = context.read<CartBloc>();
                             cartBloc.add(AddToCart(productId: product.id!));
-
-                            // Show feedback that the product has been added
+                          } catch (e) {
+                            // Handle the general error here
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content:
-                                    Text('${product.title} added to cart!'),
-                                duration: const Duration(seconds: 2),
+                              const SnackBar(
+                                content: Text(
+                                    'An error occurred while adding the item to the cart'),
+                                backgroundColor: Colors.red,
                               ),
                             );
-                          } catch (e) {
-                            if (e is DioException && e.response != null) {
-                              final errorMessage =
-                                  e.response?.data['message'] ??
-                                      'An error occurred';
-                              if (errorMessage == 'Item already in cart') {
-                                // Show a snackbar indicating the item is already in the cart
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Item already in cart'),
-                                    backgroundColor: Colors.red,
-                                    duration: Duration(seconds: 2),
-                                  ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Error: $errorMessage'),
-                                    backgroundColor: Colors.red,
-                                    duration: const Duration(seconds: 2),
-                                  ),
-                                );
-                              }
-                            } else {
-                              // General error handling
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      'An error occurred while adding the item to the cart'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
                           }
                         },
                       ),
@@ -186,7 +201,7 @@ class _ProductViewState extends State<ProductView> {
               );
             },
           ),
-        ),
+        )),
       ],
     );
   }
