@@ -9,3 +9,12 @@ sealed class ProductEvent extends Equatable {
 }
 
 final class LoadProducts extends ProductEvent {}
+
+final class LoadProductById extends ProductEvent {
+  final String productId;
+
+  const LoadProductById(this.productId);
+
+  @override
+  List<Object> get props => [productId];
+}

@@ -22,4 +22,18 @@ class ProductRemoteRepository implements IProductRepository {
       );
     }
   }
+
+  @override
+  Future<Either<Failure, ProductEntity>> getProductById(String productId) async {
+    try {
+      final product = await remoteDataSource.getProductById(productId);
+      return Right(product);
+    } catch (e) {
+      return Left(
+        ApiFailure(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
 }

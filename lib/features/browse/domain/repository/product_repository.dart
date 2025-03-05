@@ -4,4 +4,6 @@ import 'package:sonic_summit_mobile_app/features/browse/domain/entity/product_en
 
 abstract interface class IProductRepository {
   Future<Either<Failure, List<ProductEntity>>> getProducts();
+
+  Future<Either<Failure, ProductEntity>> getProductById(String productId);
 }
