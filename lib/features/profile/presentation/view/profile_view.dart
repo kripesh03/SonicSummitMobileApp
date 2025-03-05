@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sonic_summit_mobile_app/app/di/di.dart';
 import 'package:sonic_summit_mobile_app/app/shared_prefs/token_shared_prefs.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/presentation/view_model/profile_bloc.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/presentation/view_model/profile_state.dart';
+import 'package:sonic_summit_mobile_app/features/profile/presentation/view_model/profile_bloc.dart';
+import 'package:sonic_summit_mobile_app/features/profile/presentation/view_model/profile_state.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});

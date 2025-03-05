@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/domain/entity/user_entity.dart';
+import 'package:sonic_summit_mobile_app/features/profile/domain/entity/user_entity.dart';
 
 class ProfileState extends Equatable {
   final bool isLoading;

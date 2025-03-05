@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/domain/entity/user_entity.dart';
+import 'package:sonic_summit_mobile_app/features/profile/domain/entity/user_entity.dart';
 
 part 'user_api_model.g.dart';
 

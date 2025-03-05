@@ -7,7 +7,7 @@ import 'package:sonic_summit_mobile_app/features/browse/presentation/view_model/
 import 'package:sonic_summit_mobile_app/features/cart/presentation/view/cart_view.dart';
 import 'package:sonic_summit_mobile_app/features/cart/presentation/view_model/cart_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/landingpage/presentation/view/landing_page.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/presentation/view/profile_view.dart';
+import 'package:sonic_summit_mobile_app/features/profile/presentation/view/profile_view.dart';
 
 class HomeState extends Equatable {
   final int selectedIndex;

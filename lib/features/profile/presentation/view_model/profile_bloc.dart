@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/domain/use_case/get_user_usecase.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/presentation/view_model/profile_state.dart';
+import 'package:sonic_summit_mobile_app/features/profile/domain/use_case/get_user_usecase.dart';
+import 'package:sonic_summit_mobile_app/features/profile/presentation/view_model/profile_state.dart';
 
 part 'profile_event.dart'; // Ensure you have the event definition
 

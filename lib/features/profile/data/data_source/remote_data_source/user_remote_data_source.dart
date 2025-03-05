@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sonic_summit_mobile_app/app/constants/api_endpoints.dart';
 import 'package:sonic_summit_mobile_app/app/shared_prefs/token_shared_prefs.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/data/dto/get_user_dto.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/domain/entity/user_entity.dart';
+import 'package:sonic_summit_mobile_app/features/profile/data/dto/get_user_dto.dart';
+import 'package:sonic_summit_mobile_app/features/profile/domain/entity/user_entity.dart';
 
 class UserRemoteDataSource {
   final Dio _dio;

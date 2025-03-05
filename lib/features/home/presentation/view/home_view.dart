@@ -9,7 +9,7 @@ import 'package:sonic_summit_mobile_app/features/browse/presentation/view_model/
 import 'package:sonic_summit_mobile_app/features/cart/presentation/view_model/cart_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/home/presentation/view_model/home_cubit.dart';
 import 'package:sonic_summit_mobile_app/features/home/presentation/view_model/home_state.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/presentation/view_model/profile_bloc.dart';
+import 'package:sonic_summit_mobile_app/features/profile/presentation/view_model/profile_bloc.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});

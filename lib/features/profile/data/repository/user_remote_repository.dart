@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:sonic_summit_mobile_app/app/shared_prefs/token_shared_prefs.dart';
 import 'package:sonic_summit_mobile_app/core/error/failure.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/data/data_source/remote_data_source/user_remote_data_source.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/domain/entity/user_entity.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/domain/repository/user_repository.dart';
+import 'package:sonic_summit_mobile_app/features/profile/data/data_source/remote_data_source/user_remote_data_source.dart';
+import 'package:sonic_summit_mobile_app/features/profile/domain/entity/user_entity.dart';
+import 'package:sonic_summit_mobile_app/features/profile/domain/repository/user_repository.dart';
 
 class UserRemoteRepository implements IUserRepository {
   final UserRemoteDataSource remoteDataSource;

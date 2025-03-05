@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:sonic_summit_mobile_app/core/error/failure.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/domain/entity/user_entity.dart';
-import 'package:sonic_summit_mobile_app/features/profile/splash/domain/repository/user_repository.dart';
+import 'package:sonic_summit_mobile_app/features/profile/domain/entity/user_entity.dart';
+import 'package:sonic_summit_mobile_app/features/profile/domain/repository/user_repository.dart';
 
 class GetUserUseCase {
   final IUserRepository userRepository;

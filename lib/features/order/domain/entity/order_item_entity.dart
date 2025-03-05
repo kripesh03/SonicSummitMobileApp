@@ -20,7 +20,7 @@ class OrderItemEntity extends Equatable {
     return OrderItemEntity(
       productId: product['_id'],
       productName: product['title'],
-      quantity: 1, // Assuming 1 per product, modify as needed
+      quantity: 1, 
       price: double.tryParse(
               product['new_price']?['\$numberDecimal']?.toString() ?? '0') ??
           0,
