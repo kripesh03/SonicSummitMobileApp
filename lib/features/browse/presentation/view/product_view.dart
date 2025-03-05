@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sonic_summit_mobile_app/app/constants/api_endpoints.dart';
@@ -25,7 +26,8 @@ class _ProductViewState extends State<ProductView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(selectedProductId == null ? 'Product View' : 'Product Details'),
+        title: Text(
+            selectedProductId == null ? 'Product View' : 'Product Details'),
         leading: selectedProductId != null
             ? IconButton(
                 icon: const Icon(Icons.arrow_back),
@@ -120,7 +122,7 @@ class _ProductViewState extends State<ProductView> {
                       width: 50,
                       child: IconButton(
                         icon: const Icon(Icons.add_shopping_cart),
-                        onPressed: () {
+                        onPressed: () async {
                           if (product.id == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -129,8 +131,53 @@ class _ProductViewState extends State<ProductView> {
                             );
                             return;
                           }
-                          final cartBloc = context.read<CartBloc>();
-                          cartBloc.add(AddToCart(productId: product.id!));
+
+                          try {
+                            final cartBloc = context.read<CartBloc>();
+                            cartBloc.add(AddToCart(productId: product.id!));
+
+                            // Show feedback that the product has been added
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content:
+                                    Text('${product.title} added to cart!'),
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                          } catch (e) {
+                            if (e is DioException && e.response != null) {
+                              final errorMessage =
+                                  e.response?.data['message'] ??
+                                      'An error occurred';
+                              if (errorMessage == 'Item already in cart') {
+                                // Show a snackbar indicating the item is already in the cart
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Item already in cart'),
+                                    backgroundColor: Colors.red,
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Error: $errorMessage'),
+                                    backgroundColor: Colors.red,
+                                    duration: const Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            } else {
+                              // General error handling
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      'An error occurred while adding the item to the cart'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
                         },
                       ),
                     ),

@@ -8,8 +8,6 @@ import 'package:sonic_summit_mobile_app/features/cart/domain/use_case/get_cart_u
 
 part 'cart_event.dart';
 part 'cart_state.dart';
-// cart_bloc.dart
-
 
 class CartBloc extends Bloc<CartEvent, CartState> {
   final GetCartUseCase _getCartUseCase;
@@ -26,7 +24,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         super(CartState.initial()) {
     on<LoadCart>(_onLoadCart);
     on<AddToCart>(_onAddToCart);
-    on<DeleteFromCart>(_onDeleteFromCart);  // New event handler for deleting items
+    on<DeleteFromCart>(_onDeleteFromCart); // New event handler for deleting items
   }
 
   Future<void> _onLoadCart(LoadCart event, Emitter<CartState> emit) async {
@@ -47,30 +45,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   Future<void> _onAddToCart(AddToCart event, Emitter<CartState> emit) async {
-    try {
-      final userIdResult = await _tokenSharedPrefs.getUserId();
-      final userId = userIdResult.fold(
-        (failure) => throw Exception('Failed to retrieve userId: ${failure.message}'),
-        (userId) => userId,
-      );
-
-      if (userId.isEmpty) {
-        throw Exception('User ID is empty');
-      }
-
-      await _cartRemoteDataSource.addToCart(userId, event.productId);
-
-      // Reload the cart after adding an item
-      add(LoadCart());
-    } catch (e) {
-      debugPrint('Error adding to cart: $e');
-    }
-  }
-
-Future<void> _onDeleteFromCart(DeleteFromCart event, Emitter<CartState> emit) async {
   try {
-    debugPrint("Delete event received: ${event.productId}");
-
     final userIdResult = await _tokenSharedPrefs.getUserId();
     final userId = userIdResult.fold(
       (failure) => throw Exception('Failed to retrieve userId: ${failure.message}'),
@@ -81,13 +56,42 @@ Future<void> _onDeleteFromCart(DeleteFromCart event, Emitter<CartState> emit) as
       throw Exception('User ID is empty');
     }
 
-    await _cartRemoteDataSource.removeItemFromCart(userId, event.productId);
+    final isItemInCart = await _cartRemoteDataSource.isItemInCart(userId, event.productId);
 
-    // Reload the cart after removing an item
-    add(LoadCart());
+    if (isItemInCart) {
+      emit(state.copyWith(isLoading: false, error: 'Item is already in the cart'));
+    } else {
+      await _cartRemoteDataSource.addToCart(userId, event.productId);
+      add(LoadCart()); // Reload the cart after adding an item
+      emit(state.copyWith(isLoading: false));
+    }
   } catch (e) {
-    debugPrint('Error removing item from cart: $e');
+    debugPrint('Error adding to cart: $e');
+    emit(state.copyWith(isLoading: false, error: e.toString()));
   }
 }
 
+
+  Future<void> _onDeleteFromCart(DeleteFromCart event, Emitter<CartState> emit) async {
+    try {
+      debugPrint("Delete event received: ${event.productId}");
+
+      final userIdResult = await _tokenSharedPrefs.getUserId();
+      final userId = userIdResult.fold(
+        (failure) => throw Exception('Failed to retrieve userId: ${failure.message}'),
+        (userId) => userId,
+      );
+
+      if (userId.isEmpty) {
+        throw Exception('User ID is empty');
+      }
+
+      await _cartRemoteDataSource.removeItemFromCart(userId, event.productId);
+
+      // Reload the cart after removing an item
+      add(LoadCart());
+    } catch (e) {
+      debugPrint('Error removing item from cart: $e');
+    }
+  }
 }

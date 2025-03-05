@@ -34,22 +34,10 @@ class CartView extends StatelessWidget {
               builder: (context, state) {
                 if (state.isLoading) {
                   return const Center(child: CircularProgressIndicator());
-                } else if (state.error != null) {
-                  return Center(
-                    child: Text(
-                      state.error!,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  );
                 } else if (state.cart.isEmpty) {
-                  return const Center(child: Text('No Items in Cart'));
+                  // Handle empty cart case properly
+                  return const Center(child: Text('No Items in Cart Currently'));
                 } else {
-                  // Calculate the total price
-                  double totalPrice = 0;
-                  for (var cartEntity in state.cart) {
-                    totalPrice += cartEntity.totalPrice.toDouble();
-                  }
-
                   return Expanded(
                     child: ListView.builder(
                       itemCount: state.cart.length,
@@ -62,15 +50,15 @@ class CartView extends StatelessWidget {
                                 title: Text(item.title),
                                 subtitle: Text('Price: ${item.newPrice}'),
                                 trailing: IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
+                                  icon: const Icon(Icons.delete,
+                                      color: Colors.red),
                                   onPressed: () {
-                                    // Trigger the delete event with the item ID
                                     BlocProvider.of<CartBloc>(context).add(
                                         DeleteFromCart(productId: item.itemId));
                                   },
                                 ),
                               );
-                            }).toList(),
+                            }),
                           ],
                         );
                       },
@@ -94,7 +82,7 @@ class CartView extends StatelessWidget {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
-                      'Total: \Rs. ${totalPrice.toStringAsFixed(2)}',
+                      'Total: Rs. ${totalPrice.toStringAsFixed(2)}',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -115,7 +103,8 @@ class CartView extends StatelessWidget {
                     builder: (context) {
                       return BlocProvider<OrderBloc>(
                         create: (context) => getIt<OrderBloc>(),
-                        child: OrderView(cartItems: cartItems), // Pass cartItems here
+                        child: OrderView(
+                            cartItems: cartItems), // Pass cartItems here
                       );
                     },
                   ),
