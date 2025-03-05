@@ -28,4 +28,19 @@ class ProductRemoteDataSource {
       throw Exception(e);
     }
   }
+
+  Future<ProductEntity> getProductById(String productId) async {
+    try {
+      var response = await _dio.get(ApiEndpoints.getProduct(productId));
+      if (response.statusCode == 200) {
+        return ProductApiModel.fromJson(response.data).toEntity();
+      } else {
+        throw Exception(response.statusMessage);
+      }
+    } on DioException catch (e) {
+      throw Exception(e);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

@@ -17,6 +17,10 @@ class ApiEndpoints {
 
   static const String getAllProducts = "product";
   static const String productimageUrl = "http://10.0.2.2:3000";
+  static String getProduct(String productId) {
+    return "product/$productId"; // Endpoint to fetch product details by ID
+  }
+
 
   static String getCart(String userId) {
     return "cart/$userId"; // Append userId to the cart endpoint

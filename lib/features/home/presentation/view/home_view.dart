@@ -1,10 +1,11 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sensors_plus/sensors_plus.dart';
+import 'package:sonic_summit_mobile_app/app/di/di.dart';
 import 'package:sonic_summit_mobile_app/core/common/snackbar/snackbar.dart';
+import 'package:sonic_summit_mobile_app/features/browse/presentation/view/product_view.dart';
+import 'package:sonic_summit_mobile_app/features/cart/presentation/view/cart_view.dart';
+import 'package:sonic_summit_mobile_app/features/browse/presentation/view_model/product_bloc.dart';
+import 'package:sonic_summit_mobile_app/features/cart/presentation/view_model/cart_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/home/presentation/view_model/home_cubit.dart';
 import 'package:sonic_summit_mobile_app/features/home/presentation/view_model/home_state.dart';
 
@@ -16,51 +17,6 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
-  static const double tiltThreshold = 5.0; // Adjusted for sensitivity
-  bool _isTiltActionAllowed = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _listenToTilt();
-  }
-
-  @override
-  void dispose() {
-    _accelerometerSubscription?.cancel();
-    super.dispose();
-  }
-
-  void _listenToTilt() {
-    _accelerometerSubscription = accelerometerEventStream().listen((event) {
-      if (_isTiltActionAllowed) {
-        if (event.x < -tiltThreshold) {
-          _logout("left");
-        } else if (event.x > tiltThreshold) {
-          _logout("right");
-        }
-      }
-    });
-  }
-
-  void _logout(String direction) {
-    _isTiltActionAllowed = false;
-
-    showMySnackBar(
-      context: context,
-      message: "Tilt detected ($direction)! Logging out...",
-      color: Colors.red,
-    );
-
-    context.read<HomeCubit>().logout(context);
-
-    // Prevent multiple logouts in a short time
-    Future.delayed(const Duration(seconds: 2), () {
-      _isTiltActionAllowed = true;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +39,17 @@ class _HomeViewState extends State<HomeView> {
       ),
       body: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
-          return state.views.elementAt(state.selectedIndex);
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<ProductBloc>(
+                create: (context) => getIt<ProductBloc>(),
+              ),
+              BlocProvider<CartBloc>(
+                create: (context) => getIt<CartBloc>(),
+              ),
+            ],
+            child: state.views.elementAt(state.selectedIndex),
+          );
         },
       ),
       bottomNavigationBar: BlocBuilder<HomeCubit, HomeState>(

@@ -17,6 +17,7 @@ import 'package:sonic_summit_mobile_app/features/browse/data/data_source/remote_
 import 'package:sonic_summit_mobile_app/features/browse/data/repository/product_remote_repository.dart';
 import 'package:sonic_summit_mobile_app/features/browse/domain/repository/product_repository.dart';
 import 'package:sonic_summit_mobile_app/features/browse/domain/use_case/get_all_product_usecase.dart';
+import 'package:sonic_summit_mobile_app/features/browse/domain/use_case/get_product_by_id_usecase.dart';
 import 'package:sonic_summit_mobile_app/features/browse/presentation/view_model/product_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/cart/data/data_source/remote_data_source/cart_remote_data_source.dart';
 import 'package:sonic_summit_mobile_app/features/cart/data/repository/cart_remote_repository.dart';
@@ -32,8 +33,6 @@ import 'package:sonic_summit_mobile_app/features/order/domain/use_case/create_or
 import 'package:sonic_summit_mobile_app/features/order/presentation/view_model/order_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/splash/presentation/view_model/splash_cubit.dart';
 
-
-
 final getIt = GetIt.instance;
 
 Future<void> initDependencies() async {
@@ -41,7 +40,7 @@ Future<void> initDependencies() async {
   await _initHiveService();
   await _initApiService();
   await _initSharedPreferences();
-  
+
   // Initialize Home-related dependencies
   await _initHomeDependencies();
 
@@ -56,12 +55,10 @@ Future<void> initDependencies() async {
 
   // Initialize Product-related dependencies
   await _initProductDependencies();
-  
+
   await _initCartDependencies();
 
   await _initOrderDependencies();
-
-
 }
 
 Future<void> _initSharedPreferences() async {
@@ -95,7 +92,7 @@ _initRegisterDependencies() async {
   getIt.registerLazySingleton<AuthLocalRepository>(
     () => AuthLocalRepository(getIt<AuthLocalDataSource>()),
   );
-  
+
   getIt.registerLazySingleton<AuthRemoteRepository>(
     () => AuthRemoteRepository(getIt<AuthRemoteDataSource>()),
   );
@@ -157,65 +154,88 @@ _initSplashScreenDependencies() async {
 _initProductDependencies() async {
   // =========================== Data Source ===========================
   getIt.registerLazySingleton<ProductRemoteDataSource>(
-    () => ProductRemoteDataSource(dio: getIt<Dio>()), // Register the remote data source for products
+    () => ProductRemoteDataSource(
+        dio: getIt<Dio>()), // Register the remote data source for products
   );
 
   // =========================== Repository ===========================
   getIt.registerLazySingleton<IProductRepository>(
-    () => ProductRemoteRepository(remoteDataSource: getIt<ProductRemoteDataSource>()), // Register the IProductRepository interface to the ProductRemoteRepository
+    () => ProductRemoteRepository(
+        remoteDataSource: getIt<
+            ProductRemoteDataSource>()), // Register the IProductRepository interface to the ProductRemoteRepository
   );
 
   // =========================== Usecases ===========================
   getIt.registerLazySingleton<GetAllProductUseCase>(
-    () => GetAllProductUseCase(productRepository: getIt<IProductRepository>()), // Usecase for getting all products
+    () => GetAllProductUseCase(
+        productRepository:
+            getIt<IProductRepository>()), // Usecase for getting all products
+  );
+
+  // Register GetProductByIdUseCase
+  getIt.registerLazySingleton<GetProductByIdUseCase>(
+    () => GetProductByIdUseCase(
+        productRepository:
+            getIt<IProductRepository>()), // Usecase for getting product by ID
   );
 
   // =========================== Bloc ===========================
   getIt.registerFactory<ProductBloc>(
-    () => ProductBloc(getAllProductUseCase: getIt<GetAllProductUseCase>()), 
+    () => ProductBloc(
+      getAllProductUseCase: getIt(),
+      getProductByIdUseCase: getIt(),
+    ),
   );
 }
 
 _initCartDependencies() async {
   // =========================== Data Source ===========================
   getIt.registerLazySingleton<CartRemoteDataSource>(
-    () => CartRemoteDataSource(dio: getIt<Dio>(), tokenSharedPrefs: getIt<TokenSharedPrefs>()), // Register Cart Remote Data Source
+    () => CartRemoteDataSource(
+        dio: getIt<Dio>(),
+        tokenSharedPrefs:
+            getIt<TokenSharedPrefs>()), // Register Cart Remote Data Source
   );
 
   // =========================== Repository ===========================
   getIt.registerLazySingleton<ICartRepository>(
     () => CartRemoteRepository(
       remoteDataSource: getIt<CartRemoteDataSource>(),
-      tokenSharedPrefs: getIt<TokenSharedPrefs>(),  // Register TokenSharedPrefs as well
+      tokenSharedPrefs:
+          getIt<TokenSharedPrefs>(), // Register TokenSharedPrefs as well
     ),
   );
 
   // =========================== Usecases ===========================
   getIt.registerLazySingleton<GetCartUseCase>(
-    () => GetCartUseCase(cartRepository: getIt<ICartRepository>()), // Usecase for getting the cart
+    () => GetCartUseCase(
+        cartRepository:
+            getIt<ICartRepository>()), // Usecase for getting the cart
   );
 
   // Register DeleteCartItemUseCase
   getIt.registerLazySingleton<DeleteCartItemUseCase>(
-    () => DeleteCartItemUseCase(cartRepository: getIt<ICartRepository>()), // Usecase for deleting cart items
+    () => DeleteCartItemUseCase(
+        cartRepository:
+            getIt<ICartRepository>()), // Usecase for deleting cart items
   );
 
   // =========================== Bloc ===========================
   getIt.registerFactory<CartBloc>(
     () => CartBloc(
-      getCartUseCase: getIt<GetCartUseCase>(),              // Register GetCartUseCase
-      cartRemoteDataSource: getIt<CartRemoteDataSource>(),  // Register CartRemoteDataSource
-      tokenSharedPrefs: getIt<TokenSharedPrefs>(),          // Register TokenSharedPrefs
+      getCartUseCase: getIt<GetCartUseCase>(), // Register GetCartUseCase
+      cartRemoteDataSource:
+          getIt<CartRemoteDataSource>(), // Register CartRemoteDataSource
+      tokenSharedPrefs: getIt<TokenSharedPrefs>(), // Register TokenSharedPrefs
     ),
   );
 }
-
 
 _initOrderDependencies() async {
   // =========================== Data Source ===========================
   getIt.registerLazySingleton<OrderRemoteDataSource>(
     () => OrderRemoteDataSource(
-      dio: getIt<Dio>(), 
+      dio: getIt<Dio>(),
       tokenSharedPrefs: getIt<TokenSharedPrefs>(), // Inject TokenSharedPrefs
     ),
   );
@@ -223,18 +243,23 @@ _initOrderDependencies() async {
   // =========================== Repository ===========================
   getIt.registerLazySingleton<IOrderRepository>(
     () => OrderRemoteRepository(
-      remoteDataSource: getIt<OrderRemoteDataSource>(), // Inject OrderRemoteDataSource
+      remoteDataSource:
+          getIt<OrderRemoteDataSource>(), // Inject OrderRemoteDataSource
       tokenSharedPrefs: getIt<TokenSharedPrefs>(), // Inject TokenSharedPrefs
     ),
   );
 
   // =========================== Usecases ===========================
   getIt.registerLazySingleton<CreateOrderUseCase>(
-    () => CreateOrderUseCase(orderRepository: getIt<IOrderRepository>()), // Usecase for placing an order
+    () => CreateOrderUseCase(
+        orderRepository:
+            getIt<IOrderRepository>()), // Usecase for placing an order
   );
 
   // =========================== Bloc ===========================
   getIt.registerFactory<OrderBloc>(
-    () => OrderBloc(createOrderUseCase: getIt<CreateOrderUseCase>()), // Register OrderBloc with CreateOrderUseCase
+    () => OrderBloc(
+        createOrderUseCase: getIt<
+            CreateOrderUseCase>()), // Register OrderBloc with CreateOrderUseCase
   );
 }
