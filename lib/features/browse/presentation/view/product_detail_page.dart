@@ -113,7 +113,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         // Handle other errors (e.g., Dio errors)
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Item already in Caart'),
+            content: Text('Item already in Cart'),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 1),
           ),
