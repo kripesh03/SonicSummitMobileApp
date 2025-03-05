@@ -8,7 +8,7 @@ class LoginView extends StatelessWidget {
   LoginView({super.key});
 
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController(text: 'kripeshpoudel');
+  final _usernameController = TextEditingController(text: 'kripesh');
   final _passwordController = TextEditingController(text: '1234');
 
   bool rememberMe = false;
