@@ -18,6 +18,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Future<void> _onLoadProfile(
       LoadProfile event, Emitter<ProfileState> emit) async {
     try {
+      debugPrint(
+          'Loading profile for userId: ${event.userId}'); // Debugging line
       emit(state.copyWith(isLoading: true));
 
       final result =
@@ -38,7 +40,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         },
       );
     } catch (e) {
-      debugPrint('Exception occurred: $e');
+      debugPrint('Exception occurred: $e'); // Debugging line
       emit(state.copyWith(isLoading: false, error: 'Exception occurred: $e'));
     }
   }

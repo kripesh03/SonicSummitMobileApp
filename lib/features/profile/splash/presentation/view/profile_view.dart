@@ -42,30 +42,31 @@ class ProfileView extends StatelessWidget {
     return SizedBox.expand(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'Your Profile',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                'Your Profile',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            BlocBuilder<ProfileBloc, ProfileState>(
-              builder: (context, state) {
-                if (state.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state.error.isNotEmpty) {
-                  return Center(child: Text('Error: ${state.error}'));
-                } else if (state.user == null) {
-                  return const Center(child: Text('No Profile Found'));
-                } else {
-                  final user = state.user!;
-                  return Expanded(
-                    child: Column(
+              const SizedBox(height: 16),
+              BlocBuilder<ProfileBloc, ProfileState>(
+                builder: (context, state) {
+                  debugPrint('Profile state: $state'); // Debug log
+                  if (state.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state.error.isNotEmpty) {
+                    return Center(child: Text('Error: ${state.error}'));
+                  } else if (state.user == null) {
+                    return const Center(child: Text('No Profile Found'));
+                  } else {
+                    final user = state.user!;
+                    return Column(
                       children: [
                         CircleAvatar(
                           radius: 50,
@@ -82,28 +83,24 @@ class ProfileView extends StatelessWidget {
                         Text(
                           user.username ?? 'Username not available',
                           style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
                         Text('Email: ${user.email ?? 'Email not available'}'),
                         const SizedBox(height: 8),
                         Text('Bio: ${user.bio ?? 'Bio not available'}'),
                       ],
-                    ),
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                
-              },
-              child: const Text('My Orders'),
-            ),
-          ],
+                    );
+                  }
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text('My Orders'),
+              ),
+            ],
+          ),
         ),
       ),
     );
