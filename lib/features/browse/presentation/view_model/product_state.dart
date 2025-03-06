@@ -18,6 +18,7 @@ class ProductState extends Equatable {
       products: [],
       isLoading: false,
       selectedProduct: null,
+      error: null,
     );
   }
 
@@ -30,7 +31,7 @@ class ProductState extends Equatable {
     return ProductState(
       products: products ?? this.products,
       isLoading: isLoading ?? this.isLoading,
-      error: error,
+      error: error ?? this.error,
       selectedProduct: selectedProduct ?? this.selectedProduct,
     );
   }

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sonic_summit_mobile_app/app/constants/api_endpoints.dart';
@@ -6,6 +7,27 @@ import 'package:sonic_summit_mobile_app/features/browse/domain/use_case/get_all_
 import 'package:sonic_summit_mobile_app/features/browse/domain/use_case/get_product_by_id_usecase.dart';
 import 'package:sonic_summit_mobile_app/features/browse/presentation/view/product_detail_page.dart';
 import 'package:sonic_summit_mobile_app/features/browse/presentation/view_model/product_bloc.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+
+class ConnectivityListener {
+  final Connectivity _connectivity = Connectivity();
+
+  Future<bool> get isConnected async {
+    final connectivityResult = await _connectivity.checkConnectivity();
+
+    if (connectivityResult == ConnectivityResult.none) {
+      return false; // No Wi-Fi or Mobile Data
+    }
+
+    // Check if there's actual internet access
+    try {
+      final lookup = await InternetAddress.lookup('google.com');
+      return lookup.isNotEmpty && lookup.first.rawAddress.isNotEmpty;
+    } catch (_) {
+      return false; // No internet access
+    }
+  }
+}
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -16,6 +38,22 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> {
   String? selectedProductId; // Variable to hold selected product ID
+  bool isConnected = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkConnectivity();
+  }
+
+  // Method to check the connectivity
+  Future<void> _checkConnectivity() async {
+    final connectivityListener = ConnectivityListener();
+    final connected = await connectivityListener.isConnected;
+    setState(() {
+      isConnected = connected;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,18 +72,33 @@ class _LandingPageState extends State<LandingPage> {
               )
             : null,
       ),
-      body: BlocProvider(
-        create: (context) => ProductBloc(
-          getAllProductUseCase: getIt<GetAllProductUseCase>(),
-          getProductByIdUseCase: getIt<GetProductByIdUseCase>(),
-        )..add(LoadProducts()),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: selectedProductId == null
-              ? _buildProductList()
-              : ProductDetailPage(productId: selectedProductId!),
-        ),
-      ),
+      body: isConnected
+          ? BlocProvider(
+              create: (context) => ProductBloc(
+                getAllProductUseCase: getIt<GetAllProductUseCase>(),
+                getProductByIdUseCase: getIt<GetProductByIdUseCase>(),
+              )..add(LoadProducts()),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: selectedProductId == null
+                    ? _buildProductList()
+                    : ProductDetailPage(productId: selectedProductId!),
+              ),
+            )
+          : Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.signal_wifi_off, size: 50, color: Colors.grey),
+                  SizedBox(height: 16),
+                  Text(
+                    'No internet connection. Please check your Wi-Fi or mobile data.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18, color: Colors.red),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 

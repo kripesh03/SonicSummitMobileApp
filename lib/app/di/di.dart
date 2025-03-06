@@ -14,6 +14,7 @@ import 'package:sonic_summit_mobile_app/features/auth/domain/use_case/register_u
 import 'package:sonic_summit_mobile_app/features/auth/domain/use_case/upload_iamge_usecase.dart';
 import 'package:sonic_summit_mobile_app/features/auth/presentation/view_model/login/login_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/auth/presentation/view_model/signup/register_bloc.dart';
+import 'package:sonic_summit_mobile_app/features/browse/data/data_source/local_data_source/product_local_data_source.dart';
 import 'package:sonic_summit_mobile_app/features/browse/data/data_source/remote_data_source/product_remote_data_source.dart';
 import 'package:sonic_summit_mobile_app/features/browse/data/model/product_hive_model.dart';
 import 'package:sonic_summit_mobile_app/features/browse/data/repository/product_remote_repository.dart';
@@ -175,6 +176,12 @@ _initProductDependencies() async {
     ),
   );
 
+  getIt.registerLazySingleton<ProductLocalDataSource>(
+    () => ProductLocalDataSource(hiveService: getIt<HiveService>()),
+  );
+
+
+
   // =========================== Repository ===========================
   getIt.registerLazySingleton<IProductRepository>(
     () => ProductRemoteRepository(
@@ -184,8 +191,11 @@ _initProductDependencies() async {
   // =========================== Usecases ===========================
   getIt.registerLazySingleton<GetAllProductUseCase>(
     () => GetAllProductUseCase(
-        productRepository: getIt<IProductRepository>()), // Usecase for getting all products
+      productRepository: getIt<IProductRepository>(),
+      productLocalDataSource: getIt<ProductLocalDataSource>(), // Inject the local data source
+    ),
   );
+
 
   // Register GetProductByIdUseCase
   getIt.registerLazySingleton<GetProductByIdUseCase>(
