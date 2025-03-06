@@ -57,13 +57,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       (l) {
         emit(state.copyWith(isLoading: false, isSuccess: false));
         showMySnackBar(
-            context: event.context, message: "Registration Successful",color: Colors.green);
+            context: event.context, message: "Registration Successful please check email",color: Colors.green);
       
       },
       (r) {
         emit(state.copyWith(isLoading: false, isSuccess: true));
         showMySnackBar(
-            context: event.context, message: "Registration Successful");
+            context: event.context, message: "Registration Successful Please Check Your Mail");
       },
     );
   }
