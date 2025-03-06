@@ -42,9 +42,9 @@ class _LandingPageState extends State<LandingPage> {
 
   // Static image URLs for the slider
   final List<String> sliderImages = [
-    '',
-    'https://via.placeholder.com/800x400?text=Slider+2',
-    'https://via.placeholder.com/800x400?text=Slider+3',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMfvfs4Y0WF2m9ZVrEbOi-sKS8YVA_ZuONjg&s',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8Lbj_SiI5iqUgGryvak6whMkg5Z8_4OMowQ&s',
+    'https://assets-cdn.kathmandupost.com/uploads/source/news/2023/third-party/albatrossmain-1685067615.jpg',
   ];
 
   @override

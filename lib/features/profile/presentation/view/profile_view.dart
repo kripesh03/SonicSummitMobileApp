@@ -78,7 +78,7 @@ class _UserProfileSection extends StatelessWidget {
           final user = state.user!;
           final profileImageUrl = user.profilePicture != null &&
                   user.profilePicture!.isNotEmpty
-              ? 'http://10.0.2.2:3000/images/${user.profilePicture}'
+              ? 'http://192.168.1.5:3000/images/${user.profilePicture}'
               : null;
 
           return Column(
