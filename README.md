@@ -7,7 +7,6 @@ where artists and event organizers can connect with their audience. Sonic Summit
 by offering a user-friendly and efficient solution that simplifies the process of discovering and purchasing
 music and event tickets.
 
-Youtube: https://youtu.be/wxpvXN_xk8k?si=3NP5BiyUmWFfR4TS
 
 ![Screenshot_1741273408](https://github.com/user-attachments/assets/71d0eedf-ced6-4f42-b085-261cbfadb9e6)
 ![Screenshot_1741273425](https://github.com/user-attachments/assets/99f755a2-3d5b-41af-b991-4911d797d372)
