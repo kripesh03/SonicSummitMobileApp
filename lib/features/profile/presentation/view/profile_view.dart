@@ -118,32 +118,53 @@ class ProfileView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               BlocBuilder<OrdersByUserBloc, OrdersByUserState>(
-                builder: (context, state) {
-                  if (state is OrdersByUserLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is OrdersByUserFailure) {
-                    return Center(child: Text('Error: ${state.error}'));
-                  } else if (state is OrdersByUserFetched) {
-                    final orders = state.orders;
-                    if (orders.isEmpty) {
-                      return const Center(child: Text('No orders found.'));
-                    }
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: orders.length,
-                      itemBuilder: (context, index) {
-                        OrderEntity order = orders[index];
-                        return ListTile(
-                          title: Text(order.orderId), // Example order name
-                          trailing: Text("Order ID: ${order.orderId}"), // Example order ID
-                        );
-                      },
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
+  builder: (context, state) {
+    if (state is OrdersByUserLoading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (state is OrdersByUserFailure) {
+      return Center(child: Text('Error: ${state.error}'));
+    } else if (state is OrdersByUserFetched) {
+      final orders = state.orders;
+      if (orders.isEmpty) {
+        return const Center(child: Text('No orders found.'));
+      }
+      return ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: orders.length,
+        itemBuilder: (context, index) {
+          OrderEntity order = orders[index];
+          final totalAmount = order.totalAmount; // Assuming this is a double field
+          final items = order.items; // Assuming this is a List of items
+
+          return Card(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: ListTile(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Order ID: ${order.orderId}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text('Total Amount: \$${totalAmount.toStringAsFixed(2)}'), // Display total amount
+                  const SizedBox(height: 8),
+                  Text('Items:'),
+                  // Display list of items
+                  for (var item in items) 
+                    Text('- ${item.productName ?? "Item name not available"}'), // Assuming each item has a 'name' field
+                ],
               ),
+            ),
+          );
+        },
+      );
+    }
+    return const SizedBox.shrink();
+  },
+)
+
             ],
           ),
         ),
