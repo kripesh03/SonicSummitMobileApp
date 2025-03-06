@@ -67,11 +67,14 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: Image.asset(
+          'assets/logos/logo_without_background.png', // Path to your logo image
+          height: 60, // Adjust the height as needed
+        ),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: Colors.deepPurpleAccent,),
             onPressed: () {
               showMySnackBar(
                 context: context,
@@ -135,4 +138,3 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 }
-

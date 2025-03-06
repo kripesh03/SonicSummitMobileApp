@@ -10,111 +10,138 @@ class CartView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Add this to trigger the event to load the cart
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<CartBloc>(context).add(LoadCart());
     });
 
-    return SizedBox.expand(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Your Cart', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              'Your Cart',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+            Expanded(
+              child: BlocBuilder<CartBloc, CartState>(
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return const Center(child: CircularProgressIndicator(color: Colors.deepPurple));
+                  } else if (state.cart.isEmpty) {
+                    return _buildEmptyCart();
+                  } else {
+                    return _buildCartList(state);
+                  }
+                },
               ),
             ),
-            const SizedBox(height: 16),
-            BlocBuilder<CartBloc, CartState>(
-              builder: (context, state) {
-                if (state.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state.cart.isEmpty) {
-                  // Handle empty cart case properly
-                  return const Center(child: Text('No Items in Cart Currently'));
-                } else {
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: state.cart.length,
-                      itemBuilder: (BuildContext context, index) {
-                        final cartEntity = state.cart[index];
-                        return Column(
-                          children: [
-                            ...cartEntity.items.map((item) {
-                              return ListTile(
-                                title: Text(item.title),
-                                subtitle: Text('Price: ${item.newPrice}'),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      color: Colors.red),
-                                  onPressed: () {
-                                    BlocProvider.of<CartBloc>(context).add(
-                                        DeleteFromCart(productId: item.itemId));
-                                  },
-                                ),
-                              );
-                            }),
-                          ],
-                        );
-                      },
-                    ),
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            BlocBuilder<CartBloc, CartState>(
-              builder: (context, state) {
-                if (state.cart.isEmpty) {
-                  return const SizedBox.shrink();
-                } else {
-                  // Calculate the total price
-                  double totalPrice = 0;
-                  for (var cartEntity in state.cart) {
-                    totalPrice += cartEntity.totalPrice.toDouble();
-                  }
-
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      'Total: Rs. ${totalPrice.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  );
-                }
-              },
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final cartItems = context.read<CartBloc>().state.cart;
-                // Pass the cartItems to the OrderView
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return BlocProvider<OrderBloc>(
-                        create: (context) => getIt<OrderBloc>(),
-                        child: OrderView(
-                            cartItems: cartItems), // Pass cartItems here
-                      );
-                    },
-                  ),
-                );
-              },
-              child: const Text('Checkout'),
-            ),
+            _buildTotalPrice(context),
+            _buildCheckoutButton(context),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildEmptyCart() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: const [
+        Icon(Icons.remove_shopping_cart, size: 80, color: Colors.grey),
+        SizedBox(height: 16),
+        Text(
+          'No Items in Cart Currently',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.grey),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCartList(CartState state) {
+    return ListView.builder(
+      itemCount: state.cart.length,
+      itemBuilder: (context, index) {
+        final cartEntity = state.cart[index];
+        return Card(
+          elevation: 4,
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: Column(
+            children: cartEntity.items.map((item) {
+              return ListTile(
+                title: Text(item.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: Text('Price: Rs. ${item.newPrice}',
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black54)),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: () {
+                    BlocProvider.of<CartBloc>(context).add(
+                        DeleteFromCart(productId: item.itemId));
+                  },
+                ),
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildTotalPrice(BuildContext context) {
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        if (state.cart.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        double totalPrice = state.cart.fold(0, (sum, cartEntity) => sum + cartEntity.totalPrice);
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
+          child: Text(
+            'Total: Rs. ${totalPrice.toStringAsFixed(2)}',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCheckoutButton(BuildContext context) {
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        if (state.cart.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        return Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepPurple,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+            ),
+            onPressed: () {
+              final cartItems = context.read<CartBloc>().state.cart;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return BlocProvider<OrderBloc>(
+                      create: (context) => getIt<OrderBloc>(),
+                      child: OrderView(cartItems: cartItems),
+                    );
+                  },
+                ),
+              );
+            },
+            child: const Text('Checkout', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          ),
+        );
+      },
     );
   }
 }
