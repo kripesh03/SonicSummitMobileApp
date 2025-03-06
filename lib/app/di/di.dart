@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sonic_summit_mobile_app/app/shared_prefs/token_shared_prefs.dart';
 import 'package:sonic_summit_mobile_app/core/network/api_service.dart';
@@ -14,6 +15,7 @@ import 'package:sonic_summit_mobile_app/features/auth/domain/use_case/upload_iam
 import 'package:sonic_summit_mobile_app/features/auth/presentation/view_model/login/login_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/auth/presentation/view_model/signup/register_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/browse/data/data_source/remote_data_source/product_remote_data_source.dart';
+import 'package:sonic_summit_mobile_app/features/browse/data/model/product_hive_model.dart';
 import 'package:sonic_summit_mobile_app/features/browse/data/repository/product_remote_repository.dart';
 import 'package:sonic_summit_mobile_app/features/browse/domain/repository/product_repository.dart';
 import 'package:sonic_summit_mobile_app/features/browse/domain/use_case/get_all_product_usecase.dart';
@@ -70,6 +72,7 @@ Future<void> initDependencies() async {
   await _initProfileDependencies();
 
   await _initOrdersByUserDependencies();
+
 }
 
 Future<void> _initSharedPreferences() async {
@@ -86,6 +89,7 @@ _initApiService() {
 
 _initHiveService() {
   // Register Hive service
+    Hive.registerAdapter(ProductHiveModelAdapter());
   getIt.registerLazySingleton<HiveService>(() => HiveService());
 }
 
@@ -166,28 +170,27 @@ _initProductDependencies() async {
   // =========================== Data Source ===========================
   getIt.registerLazySingleton<ProductRemoteDataSource>(
     () => ProductRemoteDataSource(
-        dio: getIt<Dio>()), // Register the remote data source for products
+      dio: getIt<Dio>(), // Register the Dio instance for API calls
+      hiveService: getIt<HiveService>(), // Register the HiveService for local storage
+    ),
   );
 
   // =========================== Repository ===========================
   getIt.registerLazySingleton<IProductRepository>(
     () => ProductRemoteRepository(
-        remoteDataSource: getIt<
-            ProductRemoteDataSource>()), // Register the IProductRepository interface to the ProductRemoteRepository
+        remoteDataSource: getIt<ProductRemoteDataSource>()), // Register the IProductRepository interface to the ProductRemoteRepository
   );
 
   // =========================== Usecases ===========================
   getIt.registerLazySingleton<GetAllProductUseCase>(
     () => GetAllProductUseCase(
-        productRepository:
-            getIt<IProductRepository>()), // Usecase for getting all products
+        productRepository: getIt<IProductRepository>()), // Usecase for getting all products
   );
 
   // Register GetProductByIdUseCase
   getIt.registerLazySingleton<GetProductByIdUseCase>(
     () => GetProductByIdUseCase(
-        productRepository:
-            getIt<IProductRepository>()), // Usecase for getting product by ID
+        productRepository: getIt<IProductRepository>()), // Usecase for getting product by ID
   );
 
   // =========================== Bloc ===========================
@@ -197,8 +200,12 @@ _initProductDependencies() async {
       getProductByIdUseCase: getIt(),
     ),
   );
-}
 
+  getIt.registerLazySingleton<ProductHiveModelAdapter>(
+    () => ProductHiveModelAdapter(), // Initialize and register the product adapter
+  );
+
+}
 _initCartDependencies() async {
   // =========================== Data Source ===========================
   getIt.registerLazySingleton<CartRemoteDataSource>(
@@ -321,3 +328,5 @@ _initOrdersByUserDependencies() async {
     () => OrdersByUserBloc(getOrdersByUserIdUseCase: getIt<GetOrdersByUserIdUseCase>()),
   );
 }
+
+
