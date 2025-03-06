@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:sonic_summit_mobile_app/app/constants/api_endpoints.dart';
 import 'package:sonic_summit_mobile_app/app/shared_prefs/token_shared_prefs.dart';
-import 'package:sonic_summit_mobile_app/features/order/data/dto/create_order_dto.dart';
 import 'package:sonic_summit_mobile_app/features/order/data/model/order_api_model.dart';
 import 'package:sonic_summit_mobile_app/features/order/domain/entity/order_entity.dart';
 
@@ -16,54 +14,45 @@ class OrderRemoteDataSource {
   })  : _dio = dio,
         _tokenSharedPrefs = tokenSharedPrefs;
 
-Future<OrderEntity> createOrder(String name, String phone) async {
-  try {
-    final userIdResult = await _tokenSharedPrefs.getUserId();
-    final userId = userIdResult.fold(
-      (failure) {
-        throw Exception('Failed to retrieve userId from SharedPreferences: ${failure.message}');
-      },
-      (userId) {
-        print("User ID: $userId"); // Debug User ID
-        return userId;
-      },
-    );
+  Future<OrderEntity> createOrder(String name, String phone) async {
+    try {
+      final userIdResult = await _tokenSharedPrefs.getUserId();
+      final userId = userIdResult.fold(
+        (failure) => throw Exception('Failed to retrieve userId: ${failure.message}'),
+        (userId) => userId,
+      );
 
-    final createOrderDTO = CreateOrderDTO(userId: userId, name: name, phone: phone);
-    final requestData = createOrderDTO.toJson();
+      final response = await _dio.post(
+        ApiEndpoints.createOrder,
+        data: {"userId": userId, "name": name, "phone": phone},
+      );
 
-    // Debugging: Print request payload
-    print("Sending Order Request: $requestData");
-
-    final response = await _dio.post(
-      ApiEndpoints.createOrder,
-      data: requestData,
-    );
-
-    // Debugging: Print raw response
-    print("Order API Response: ${response.data}");
-
-    if (response.statusCode == 200) {
-      final orderData = response.data;
-      final orderApiModel = OrderApiModel.fromJson(orderData['order']);
-
-      // Debugging: Print parsed order data
-      print("Parsed Order Data: $orderApiModel");
-
-      return orderApiModel.toEntity();
-    } else {
-      throw Exception('Failed to create order: ${response.statusCode}, ${response.data}');
+      if (response.statusCode == 200) {
+        return OrderApiModel.fromJson(response.data).toEntity();
+      } else {
+        throw Exception('Failed to create order: ${response.statusCode}, ${response.data}');
+      }
+    } on DioException catch (e) {
+      throw Exception('Dio error: ${e.message}, StatusCode: ${e.response?.statusCode}, Data: ${e.response?.data}');
+    } catch (e) {
+      throw Exception('Unknown error: $e');
     }
-  } on DioException catch (e) {
-    print("Dio Error - Type: ${e.type}, Message: ${e.message}");
-    if (e.response != null) {
-      print("Dio Error - Response Data: ${e.response?.data}");
-      print("Dio Error - Response Status Code: ${e.response?.statusCode}");
-    }
-    throw Exception('Dio error: ${e.message}, StatusCode: ${e.response?.statusCode}, Data: ${e.response?.data}');
-  } catch (e) {
-    print("Unknown error occurred: $e");
-    throw Exception('Unknown error: $e');
   }
-}
+
+  Future<List<OrderEntity>> getOrdersByUserId(String userId) async {
+    try {
+      final response = await _dio.get(ApiEndpoints.getOrdersByUserId(userId));
+
+      if (response.statusCode == 200) {
+        List<dynamic> ordersJson = response.data;
+        return ordersJson.map((order) => OrderApiModel.fromJson(order).toEntity()).toList();
+      } else {
+        throw Exception('Failed to fetch orders: ${response.statusCode}, ${response.data}');
+      }
+    } on DioException catch (e) {
+      throw Exception('Dio error: ${e.message}, StatusCode: ${e.response?.statusCode}, Data: ${e.response?.data}');
+    } catch (e) {
+      throw Exception('Unknown error: $e');
+    }
+  }
 }

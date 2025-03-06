@@ -14,26 +14,36 @@ class OrderRemoteRepository implements IOrderRepository {
     required this.tokenSharedPrefs,
   });
 
-@override
-Future<Either<Failure, OrderEntity>> createOrder(Map<String, dynamic> orderData) async {
-  try {
-    final userIdResult = await tokenSharedPrefs.getUserId();
+  @override
+  Future<Either<Failure, OrderEntity>> createOrder(Map<String, dynamic> orderData) async {
+    try {
+      final userIdResult = await tokenSharedPrefs.getUserId();
 
-    return userIdResult.fold(
-      (failure) => Left(failure),
-      (userId) async {
-        orderData['userId'] = userId;
+      return userIdResult.fold(
+        (failure) => Left(failure),
+        (userId) async {
+          orderData['userId'] = userId;
 
-        // Only send name, phone, and userId to the remote data source
-        final orderResponse = await remoteDataSource.createOrder(
-          orderData['name'],
-          orderData['phone'] // Exclude email as it's not present in orderData
-        );
-        return Right(orderResponse);
-      },
-    );
-  } catch (e) {
-    return Left(ApiFailure(message: e.toString()));
+          // Only send name, phone, and userId to the remote data source
+          final orderResponse = await remoteDataSource.createOrder(
+            orderData['name'],
+            orderData['phone'] // Exclude email as it's not present in orderData
+          );
+          return Right(orderResponse);
+        },
+      );
+    } catch (e) {
+      return Left(ApiFailure(message: e.toString()));
+    }
   }
-}
+
+  @override
+  Future<Either<Failure, List<OrderEntity>>> getOrderByUserId(String userId) async {
+    try {
+      final orderResponse = await remoteDataSource.getOrdersByUserId(userId);
+      return Right(orderResponse);
+    } catch (e) {
+      return Left(ApiFailure(message: e.toString()));
+    }
+  }
 }

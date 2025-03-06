@@ -30,11 +30,13 @@ import 'package:sonic_summit_mobile_app/features/order/data/data_source/remote_d
 import 'package:sonic_summit_mobile_app/features/order/data/repository/order_remote_repository.dart';
 import 'package:sonic_summit_mobile_app/features/order/domain/repository/order_repository.dart';
 import 'package:sonic_summit_mobile_app/features/order/domain/use_case/create_order_use_case.dart';
+import 'package:sonic_summit_mobile_app/features/order/domain/use_case/get_order_by_user_id_use_case.dart';
 import 'package:sonic_summit_mobile_app/features/order/presentation/view_model/order_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/profile/data/data_source/remote_data_source/user_remote_data_source.dart';
 import 'package:sonic_summit_mobile_app/features/profile/data/repository/user_remote_repository.dart';
 import 'package:sonic_summit_mobile_app/features/profile/domain/repository/user_repository.dart';
 import 'package:sonic_summit_mobile_app/features/profile/domain/use_case/get_user_usecase.dart';
+import 'package:sonic_summit_mobile_app/features/profile/presentation/view_model/orders/orders_by_user_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/profile/presentation/view_model/profile_bloc.dart';
 import 'package:sonic_summit_mobile_app/features/splash/presentation/view_model/splash_cubit.dart';
 
@@ -66,6 +68,8 @@ Future<void> initDependencies() async {
   await _initOrderDependencies();
 
   await _initProfileDependencies();
+
+  await _initOrdersByUserDependencies();
 }
 
 Future<void> _initSharedPreferences() async {
@@ -299,5 +303,21 @@ _initProfileDependencies() async {
   // =========================== Bloc ===========================
   getIt.registerFactory<ProfileBloc>(
     () => ProfileBloc(getUserUseCase: getIt<GetUserUseCase>()),
+  );
+}
+
+
+_initOrdersByUserDependencies() async {
+
+  // =========================== Usecases ===========================
+  getIt.registerLazySingleton<GetOrdersByUserIdUseCase>(
+    () => GetOrdersByUserIdUseCase(
+      orderRepository: getIt<IOrderRepository>(),
+    ),
+  );
+
+  // =========================== Bloc ===========================
+  getIt.registerFactory<OrdersByUserBloc>(
+    () => OrdersByUserBloc(getOrdersByUserIdUseCase: getIt<GetOrdersByUserIdUseCase>()),
   );
 }

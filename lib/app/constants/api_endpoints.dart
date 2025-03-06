@@ -31,7 +31,12 @@ class ApiEndpoints {
   static const String removeFromCart = "cart/remove";
 
   // ====================== Order Routes ======================
-  static String createOrder = "orders"; // Endpoint for creating an order
+  static const String createOrder = "orders"; // Endpoint for creating an order
+
+  // Add this new endpoint to fetch orders by user ID
+  static String getOrdersByUserId(String userId) {
+    return "orders/user/$userId"; // Endpoint to fetch orders by user ID
+  }
 
   // ====================== User Routes ======================
   static String getUser(String userId) {
